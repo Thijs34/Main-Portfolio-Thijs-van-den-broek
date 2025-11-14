@@ -65,7 +65,7 @@
 /* ===== GLOBAL STYLES ===== */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 100px;
+  scroll-padding-top: clamp(24px, 4vh, 48px);
 }
 
 body {
@@ -156,10 +156,11 @@ body {
 
 /* ===== SECTIONS ===== */
 
-/* About Section */
-#about {
-  margin-bottom: 40px;
-  padding: 45px;
+/* Unified Section Spacing (Desktop) */
+#about,
+#work,
+#contact {
+  padding: 60px 45px; /* Increased vertical rhythm */
 }
 
 .grid-1,
@@ -204,8 +205,7 @@ body {
 
 /* Showcase Section */
 .app-showcase {
-  @apply w-full mt-20 items-center justify-center;
-  padding-inline: 45px;
+  @apply w-full flex flex-col items-center md:items-stretch justify-center;
   padding-block: 45px;
 
   .showcaselayout {
@@ -361,10 +361,10 @@ body {
 @media (max-width: 537px) {
   .app-showcase {
     padding-inline: 20px;
-    padding-block: 20px;
+    padding-block: 24px;
   }
-  #about {
-    padding: 20px;
+  #about, #work, #contact {
+    padding: 36px 20px; /* Slightly more breathing room */
   }
 }
 
@@ -372,10 +372,10 @@ body {
 @media (max-width: 365px) {
   .app-showcase {
     padding-inline: 15px;
-    padding-block: 15px;
+    padding-block: 20px;
   }
-  #about {
-    padding: 15px;
+  #about, #work, #contact {
+    padding: 28px 15px;
   }
 }
 
@@ -383,10 +383,10 @@ body {
 @media (max-width: 348px) {
   .app-showcase {
     padding-inline: 5px;
-    padding-block: 5px;
+    padding-block: 12px;
   }
-  #about {
-    padding: 5px;
+  #about, #work, #contact {
+    padding: 20px 5px;
   }
 }
 
@@ -394,10 +394,10 @@ body {
 @media (max-width: 335px) {
   .app-showcase {
     padding-inline: 0px;
-    padding-block: 0px;
+    padding-block: 10px;
   }
-  #about {
-    padding: 0px;
+  #about, #work, #contact {
+    padding: 16px 0px;
   }
   .text-heading, .app-showcase h2, .app-showcase p {
     justify-content: center;
@@ -429,4 +429,39 @@ body {
 /* Enable container queries on card wrapper */
 .pin-full {
   container-type: inline-size;
+}
+/* Responsive adjustments for project cards on small screens */
+@media (max-width: 640px) {
+  .project-card-scaler {
+    width: 100%;
+    scale: 1;
+  }
+  
+  .project-card-scaler h1 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  
+  .project-card-scaler p {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .project-card-scaler h1 {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+  
+  .project-card-scaler p {
+    font-size: 0.8125rem;
+    line-height: 1.125rem;
+  }
+  
+  .project-card-scaler .flex.items-center.justify-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
 }

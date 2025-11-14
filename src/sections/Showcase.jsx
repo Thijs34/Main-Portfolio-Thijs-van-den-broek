@@ -1,49 +1,25 @@
-import { useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { motion } from "framer-motion";
 
-gsap.registerPlugin(ScrollTrigger);
+const fadeInProps = (delay = 0) => ({
+  initial: { opacity: 0, y: 50 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.3 },
+  transition: { duration: 0.7, delay },
+});
 
 const Showcase = () => {
-  const sectionRef = useRef(null);
-  const rydeRef = useRef(null);
-  const libraryRef = useRef(null);
-  const ycDirectoryRef = useRef(null);
-
-  useGSAP(() => {
-    gsap.fromTo(
-      sectionRef.current,
-      { opacity: 0 },
-      { opacity: 1, duration: 1.2, ease: "power2.out" }
-    );
-
-    const cards = [rydeRef.current, libraryRef.current, ycDirectoryRef.current];
-    cards.forEach((card, i) => {
-      gsap.fromTo(
-        card,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          delay: i * 0.25,
-          scrollTrigger: {
-            trigger: card,
-            start: "top bottom-=100",
-          },
-        }
-      );
-    });
-  }, []);
-
   return (
-    <section id="work" ref={sectionRef} className="app-showcase">
-        <h2 className="text-heading">Projects</h2>
+    <section id="work" className="app-showcase c-space mt-4 sm:mt-6">
+      <motion.h2
+        className="text-heading text-center md:text-left w-full px-2 sm:px-0"
+        {...fadeInProps()}
+      >
+        Projects
+      </motion.h2>
       <div className="w-full mt-12">
         <div className="showcaselayout">
           {/* --- MAIN PROJECT: Ryde --- */}
-          <div ref={rydeRef} className="first-project-wrapper">
+          <motion.div className="first-project-wrapper" {...fadeInProps(0.1)}>
             <div className="image-wrapper bg-[#BEE6FF] rounded-2xl shadow-[0_0_60px_rgba(51,194,204,0.25)]">
               <img src="/assets/project1.png" alt="Ryde App Interface" />
             </div>
@@ -55,12 +31,12 @@ const Showcase = () => {
                A website built with pure HTML and CSS, delivering a fast, responsive, and user-friendly browsing experience designed for all devices.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* --- SECONDARY PROJECTS --- */}
-          <div className="project-list-wrapper overflow-hidden">
+          <motion.div className="project-list-wrapper overflow-hidden" {...fadeInProps(0.2)}>
             {/* Library Platform */}
-            <div className="project" ref={libraryRef}>
+            <motion.div className="project" {...fadeInProps(0.3)}>
               <div className="image-wrapper bg-[#EAD6B3] rounded-2xl shadow-[0_0_40px_rgba(214,153,92,0.35)]">
                 <img
                   src="/assets/project2.png"
@@ -68,16 +44,16 @@ const Showcase = () => {
                 />
               </div>
               <h2>Facial Recognition Risks</h2>
-            </div>
+            </motion.div>
 
             {/* YC Directory */}
-            <div className="project" ref={ycDirectoryRef}>
+            <motion.div className="project" {...fadeInProps(0.4)}>
               <div className="image-wrapper bg-[#E7C3E3] rounded-2xl shadow-[0_0_40px_rgba(202,47,140,0.35)]">
                 <img src="/assets/project3.png" alt="YC Directory App" />
               </div>
               <h2>Hyvä-Powered B2B Site</h2>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>

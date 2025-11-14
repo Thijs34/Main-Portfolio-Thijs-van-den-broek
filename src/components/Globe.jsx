@@ -2,7 +2,7 @@
 
 import createGlobe from "cobe";
 import { useMotionValue, useSpring } from "motion/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { twMerge } from "tailwind-merge";
 
@@ -40,8 +40,10 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
   let phi = 0;
   let width = 0;
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const pointerInteracting = useRef(null);
   const pointerInteractionMovement = useRef(0);
+  const [isVisible, setIsVisible] = useState(false);
 
   const r = useMotionValue(0);
   const rs = useSpring(r, {
@@ -66,6 +68,32 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
   };
 
   useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const viewportHeight = window.innerHeight || 0;
+        const rect = entry.boundingClientRect;
+        const overlapsViewport = rect.top < viewportHeight && rect.bottom > 0;
+        setIsVisible(entry.isIntersecting || entry.intersectionRatio > 0 || overlapsViewport);
+      },
+      { threshold: [0, 0.01, 0.15, 0.3], rootMargin: "220px 0px 220px 0px" }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) {
+      return;
+    }
     const onResize = () => {
       if (canvasRef.current) {
         width = canvasRef.current.offsetWidth;
@@ -80,7 +108,7 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
       width: width * 2,
       height: width * 2,
       onRender: (state) => {
-        if (!pointerInteracting.current) phi += 0.005;
+        if (!pointerInteracting.current) phi += 0.0024; // slightly faster
         state.phi = phi + rs.get();
         state.width = width * 2;
         state.height = width * 2;
@@ -92,10 +120,11 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
       globe.destroy();
       window.removeEventListener("resize", onResize);
     };
-  }, [rs, config]);
+  }, [rs, config, isVisible]);
 
   return (
     <div
+      ref={containerRef}
       className={twMerge(
         "mx-auto aspect-[1/1] w-full max-w-[600px]",
         className

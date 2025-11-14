@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { twMerge } from "tailwind-merge";
 
@@ -8,22 +8,40 @@ export const FlipWords = ({
   duration = 3000,
   className
 }) => {
-  const [currentWord, setCurrentWord] = useState(words[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const timeoutRef = useRef(null);
+  const fallbackWords = useMemo(() => (words?.length ? words : [""]), [words]);
+  const currentWord = fallbackWords[currentIndex % fallbackWords.length];
 
-  // thanks for the fix Julian - https://github.com/Julian-AT
   const startAnimation = useCallback(() => {
-    const word = words[words.indexOf(currentWord) + 1] || words[0];
-    setCurrentWord(word);
+    setCurrentIndex((prev) => (prev + 1) % fallbackWords.length);
     setIsAnimating(true);
-  }, [currentWord, words]);
+  }, [fallbackWords.length]);
 
   useEffect(() => {
-    if (!isAnimating)
-      setTimeout(() => {
-        startAnimation();
-      }, duration);
+    setCurrentIndex((prev) => prev % fallbackWords.length);
+  }, [fallbackWords.length]);
+
+  useEffect(() => {
+    if (isAnimating) {
+      return;
+    }
+    timeoutRef.current = window.setTimeout(startAnimation, duration);
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [isAnimating, duration, startAnimation]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <AnimatePresence

@@ -1,23 +1,68 @@
 import { FaLocationArrow } from "react-icons/fa6";
+import { motion } from "framer-motion";
+import type { MotionProps } from "framer-motion";
 
 import { projects } from "../data";
 import { PinContainer } from "../ui/pin";
 
+const fadeInProps = (delay = 0): MotionProps => ({
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.35 },
+  transition: { duration: 0.6, delay },
+});
+
 const RecentProjects = () => {
   return (
-    <section id="work" className="c-space" style={{ padding: "45px", marginBottom: "40px" }}>
-      <h2 className="text-heading">Recent Projects</h2>
+    <section id="work" className="c-space">
+      <motion.div
+        className="flex flex-col items-center gap-2 md:flex-row md:items-center md:justify-between md:gap-4 mt-4 sm:mt-6"
+        {...fadeInProps()}
+      >
+        <h2 className="text-heading text-center md:text-left px-2 sm:px-0">Recent Projects</h2>
+        <a
+          href="#"
+          className="group mt-1 md:mt-0 text-sm md:text-base inline-flex items-center gap-2"
+          aria-label="View all projects"
+          onClick={(e) => e.preventDefault()}
+        >
+          {/* Label mask: slide old text up, new from bottom */}
+          <span className="relative overflow-hidden h-[1em] leading-none">
+            <span className="flex flex-col transition-transform duration-300 ease-out group-hover:-translate-y-1/2 motion-reduce:transition-none">
+              <span className="text-white">View all</span>
+              <span className="text-white">View all</span>
+            </span>
+          </span>
+
+          {/* Icon mask: first arrow slides out right past edge, new slides in */}
+          <span className="relative overflow-hidden w-[1.1em] h-[1.1em] ms-1 align-middle">
+            <FaLocationArrow className="absolute inset-0 w-full h-full text-white transition-transform duration-300 ease-out group-hover:translate-x-[140%] motion-reduce:transition-none [will-change:transform]" />
+            <FaLocationArrow className="absolute inset-0 w-full h-full -translate-x-[140%] text-white transition-transform duration-300 ease-out group-hover:translate-x-0 motion-reduce:transition-none [will-change:transform]" />
+          </span>
+        </a>
+      </motion.div>
       {/* Full-width two-column flex with consistent gutters */}
       <div className="mt-12 w-full max-w-[1600px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((item) => (
-            <div key={item.id} className="w-full" style={{ zIndex: 1 }}>
+          {projects.map((item, index) => (
+            <motion.div
+              key={item.id}
+              className="w-full"
+              style={{ zIndex: 1 }}
+              {...fadeInProps(index * 0.12)}
+            >
               <div className="relative w-full" style={{ zIndex: 1 }}>
-                <PinContainer
-                  title="/ui.aceternity.com"
-                  href="https://twitter.com/mannupaaji"
-                  containerClassName="pin-full w-full"
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a57db]/50 rounded-2xl"
                 >
+                  <PinContainer
+                    title={item.pinLabel ?? item.title}
+                    href={item.link}
+                    containerClassName="pin-full w-full"
+                  >
                   <div className="project-card-scaler">
                     {/* Responsive media section: only main project image, rounded corners, fully visible, uses more space */}
                     <div className="relative w-full mb-8">
@@ -31,12 +76,12 @@ const RecentProjects = () => {
                       </div>
                     </div>
 
-                    <h1 className="font-bold text-2xl line-clamp-1 w-full">
+                    <h1 className="font-bold text-xl sm:text-2xl w-full break-words">
                       {item.title}
                     </h1>
 
                     <p
-                      className="text-base font-light line-clamp-2 w-full"
+                      className="text-sm sm:text-base font-light w-full break-words"
                       style={{ color: "#BEC1DD", margin: "1vh 0" }}
                     >
                       {item.des}
@@ -57,15 +102,21 @@ const RecentProjects = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="flex justify-center items-center">
-                        <p className="flex text-base text-purple">Check Live Site</p>
-                        <FaLocationArrow className="ms-3" color="#CBACF9" />
-                      </div>
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center text-sm sm:text-base text-purple whitespace-nowrap"
+                      >
+                        <span>Check Live Site</span>
+                        <FaLocationArrow className="ms-2 sm:ms-3" color="#CBACF9" />
+                      </a>
                     </div>
                   </div>
-                </PinContainer>
+                  </PinContainer>
+                </a>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

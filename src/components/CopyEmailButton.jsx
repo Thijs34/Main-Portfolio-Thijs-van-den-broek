@@ -1,17 +1,35 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+
 const CopyEmailButton = () => {
   const [copied, setCopied] = useState(false);
+  const timeoutRef = useRef(null);
   const email = "thijsvdbroek27@gmail.com";
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(email);
+  const copyToClipboard = async () => {
+    const copiedSuccessfully = await copyText(email);
+    if (!copiedSuccessfully) {
+      return;
+    }
+
     setCopied(true);
 
-    setTimeout(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = window.setTimeout(() => {
       setCopied(false);
     }, 2000);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
   return (
     <motion.button
       onClick={copyToClipboard}
@@ -49,5 +67,32 @@ const CopyEmailButton = () => {
     </motion.button>
   );
 };
+
+async function copyText(text) {
+  if (navigator?.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (error) {
+      console.error("Clipboard API failed", error);
+    }
+  }
+
+  try {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    const success = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return success;
+  } catch (error) {
+    console.error("Fallback copy failed", error);
+    return false;
+  }
+}
 
 export default CopyEmailButton;

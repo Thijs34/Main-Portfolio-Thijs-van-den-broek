@@ -18,8 +18,15 @@ function Navigation({ onClick, activeSection }) {
           <li key={link.name}>
             <a
               href={link.href}
-              onClick={onClick}
-              className={`pointer-events-auto relative px-3 py-1 rounded font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500
+              onClick={(e) => {
+                if (link.href === "#home") {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+                onClick && onClick(e);
+                e.currentTarget.blur();
+              }}
+              className={`pointer-events-auto relative px-3 py-1 rounded font-medium transition-all duration-200 focus:outline-none
                 ${
                   isActive
                     ? "text-purple-400 after:w-full"
@@ -51,17 +58,64 @@ const Navbar = () => {
 
   // Active section detection
   useEffect(() => {
-    const sections = document.querySelectorAll("section[id]");
+    const trackedSections = new Set();
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => {
+            if (b.intersectionRatio === a.intersectionRatio) {
+              return a.target.offsetTop - b.target.offsetTop;
+            }
+            return b.intersectionRatio - a.intersectionRatio;
+          })[0];
+
+        if (visibleEntry) {
+          const nextId = visibleEntry.target.id;
+          setActiveSection((current) => (current === nextId ? current : nextId));
+        }
       },
-      { threshold: 0.4 }
+      {
+        threshold: [0.2, 0.35, 0.5, 0.7],
+        rootMargin: "-12% 0px -25% 0px",
+      }
     );
-    sections.forEach((section) => observer.observe(section));
-    return () => sections.forEach((section) => observer.unobserve(section));
+
+    const registerSections = () => {
+      document.querySelectorAll("section[id]").forEach((section) => {
+        if (trackedSections.has(section)) return;
+        trackedSections.add(section);
+        observer.observe(section);
+      });
+    };
+
+    registerSections();
+
+    const mutationObserver = new MutationObserver(() => {
+      registerSections();
+    });
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    const handleScrollBottom = () => {
+      const { innerHeight, scrollY } = window;
+      const { offsetHeight } = document.documentElement;
+      const nearBottom = innerHeight + scrollY >= offsetHeight - 40;
+      if (nearBottom) {
+        setActiveSection((current) => (current === "contact" ? current : "contact"));
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollBottom, { passive: true });
+
+    return () => {
+      mutationObserver.disconnect();
+      observer.disconnect();
+      trackedSections.clear();
+      window.removeEventListener("scroll", handleScrollBottom);
+    };
   }, []);
 
   // Scroll detection
@@ -84,6 +138,10 @@ const Navbar = () => {
           {/* Logo */}
           <a
             href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
             className={`pointer-events-auto text-xl font-bold text-purple-300 hover:text-white transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center gap-2 ${
               scrolled ? "scale-95" : "scale-100"
             }`}
