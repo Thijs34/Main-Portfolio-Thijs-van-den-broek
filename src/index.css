@@ -78,7 +78,7 @@ body {
 
 /* ===== UTILITY CLASSES ===== */
 .c-space {
-  @apply sm:px-10 px-5 lg:px-15;
+  @apply mx-auto w-full max-w-7xl px-6 sm:px-10;
 }
 
 .hover-animation {

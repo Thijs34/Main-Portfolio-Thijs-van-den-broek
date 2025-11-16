@@ -1,9 +1,15 @@
+import { useEffect, useRef } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import type { MotionProps } from "framer-motion";
 
 import { projects } from "../data";
+import { cn } from "../lib/utils";
 import { PinContainer } from "../ui/pin";
+
+type SectionReadyProps = {
+  onReady?: () => void;
+};
 
 const fadeInProps = (delay = 0): MotionProps => ({
   initial: { opacity: 0, y: 40 },
@@ -12,7 +18,15 @@ const fadeInProps = (delay = 0): MotionProps => ({
   transition: { duration: 0.6, delay },
 });
 
-const RecentProjects = () => {
+const RecentProjects = ({ onReady }: SectionReadyProps) => {
+  const readyRef = useRef(false);
+
+  useEffect(() => {
+    if (readyRef.current) return;
+    readyRef.current = true;
+    onReady?.();
+  }, [onReady]);
+
   return (
     <section id="work" className="c-space">
       <motion.div
@@ -44,25 +58,30 @@ const RecentProjects = () => {
       {/* Full-width two-column flex with consistent gutters */}
       <div className="mt-12 w-full max-w-[1600px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((item, index) => (
-            <motion.div
-              key={item.id}
-              className="w-full"
-              style={{ zIndex: 1 }}
-              {...fadeInProps(index * 0.12)}
-            >
-              <div className="relative w-full" style={{ zIndex: 1 }}>
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a57db]/50 rounded-2xl"
-                >
-                  <PinContainer
-                    title={item.pinLabel ?? item.title}
-                    href={item.link}
-                    containerClassName="pin-full w-full"
-                  >
+          {projects.map((item, index) => {
+            const linkHref = item.link ?? "#";
+            const isVideoLink = /youtube\.com|youtu\.be/.test(linkHref);
+            const ctaLabel = isVideoLink ? "Watch Video" : "Check Live Site";
+            const ctaGradient = "from-[#5c33cc]/70 via-[#7a57db]/90 to-[#9f7bff]/80";
+            const navigateToDetail = () => {
+              if (!item.detailPath) return;
+              window.location.assign(item.detailPath);
+            };
+
+            return (
+              <motion.div
+                key={item.id}
+                className="w-full"
+                style={{ zIndex: 1 }}
+                {...fadeInProps(index * 0.12)}
+              >
+                <div className="relative w-full" style={{ zIndex: 1 }}>
+                  <div className="block w-full rounded-2xl">
+                    <PinContainer
+                      containerClassName="pin-full w-full"
+                      onClick={item.detailPath ? navigateToDetail : undefined}
+                      title={item.detailPath ? "More info" : undefined}
+                    >
                   <div className="project-card-scaler">
                     {/* Responsive media section: only main project image, rounded corners, fully visible, uses more space */}
                     <div className="relative w-full mb-8">
@@ -87,7 +106,7 @@ const RecentProjects = () => {
                       {item.des}
                     </p>
 
-                    <div className="flex items-center justify-between mt-7 mb-3 w-full">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-7 mb-3 w-full">
                       <div className="flex items-center">
                         {item.iconLists.map((icon, index) => (
                           <div
@@ -103,21 +122,36 @@ const RecentProjects = () => {
                         ))}
                       </div>
                       <a
-                        href={item.link}
+                        href={linkHref}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center text-sm sm:text-base text-purple whitespace-nowrap"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`${ctaLabel} for ${item.title}`}
+                        className="group/action relative inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[#7a57db]/60 px-4 py-2 text-sm sm:text-base font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#7a57db]/60 focus-visible:ring-offset-[#050714] overflow-hidden"
+                        style={{ background: "linear-gradient(120deg, rgba(124,94,219,0.08), rgba(193,164,255,0.03))" }}
                       >
-                        <span>Check Live Site</span>
-                        <FaLocationArrow className="ms-2 sm:ms-3" color="#CBACF9" />
+                        <span
+                          className={cn(
+                            "absolute inset-0 opacity-0 transition-opacity duration-300 blur-[1px] group-hover/action:opacity-100",
+                            `bg-gradient-to-r ${ctaGradient}`
+                          )}
+                        ></span>
+                        <span className="relative z-10 flex items-center gap-2">
+                          {ctaLabel}
+                          <FaLocationArrow
+                            className="transition-transform duration-300 group-hover/action:translate-x-1 ms-1"
+                            color="#CBACF9"
+                          />
+                        </span>
                       </a>
                     </div>
                   </div>
-                  </PinContainer>
-                </a>
-              </div>
-            </motion.div>
-          ))}
+                    </PinContainer>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

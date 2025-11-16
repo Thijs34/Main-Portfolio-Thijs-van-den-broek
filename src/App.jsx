@@ -1,4 +1,12 @@
-import React, { Suspense, lazy } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Navbar from "./sections/Navbar";
 import Hero from "./sections/Hero";
 import { Boxes } from "./components/background-boxes";
@@ -19,6 +27,54 @@ const SectionSkeleton = ({ minHeight = "24rem", label }) => (
 );
 
 export default function App() {
+  const initialHashRef = useRef(typeof window !== "undefined" ? window.location.hash : "");
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const [loadedSections, setLoadedSections] = useState({
+    about: false,
+    projects: false,
+    contact: false,
+  });
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  const markSectionReady = useCallback((section) => {
+    setLoadedSections((prev) => {
+      if (prev[section]) return prev;
+      return { ...prev, [section]: true };
+    });
+  }, []);
+
+  const isPageReady = useMemo(
+    () => hasHydrated && Object.values(loadedSections).every(Boolean),
+    [hasHydrated, loadedSections]
+  );
+
+  useEffect(() => {
+    if (!isPageReady) return;
+    const hash = initialHashRef.current;
+    if (!hash) return;
+    const aliasMap = { "#projects": "work" };
+    const normalizedHash = hash.toLowerCase();
+    const targetId = aliasMap[normalizedHash] ?? normalizedHash.replace(/^#/, "");
+    if (!targetId) return;
+
+    const scrollToTarget = () => {
+      const element = document.getElementById(targetId);
+      if (!element) return false;
+      requestAnimationFrame(() => {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.setTimeout(() => {
+          element.scrollIntoView({ behavior: "auto", block: "start" });
+        }, 900);
+      });
+      return true;
+    };
+
+    scrollToTarget();
+  }, [isPageReady]);
+
   return (
     <div className="relative w-full min-h-screen bg-[#0a0f1c] overflow-x-hidden">
       {/* Homepage with Boxes background */}
@@ -35,17 +91,17 @@ export default function App() {
       {/* About section BELOW homepage, NO background boxes */}
       <div className="container mx-auto max-w-7xl">
         <Suspense fallback={<SectionSkeleton label="Loading about section" />}>
-          <About />
+          <About onReady={() => markSectionReady("about")} />
         </Suspense>
       </div>
       <div className="container mx-auto max-w-7xl">
         <Suspense fallback={<SectionSkeleton label="Loading projects" />}>
-          <RecentProjects />
+          <RecentProjects onReady={() => markSectionReady("projects")} />
         </Suspense>
       </div>
        <div className="container mx-auto max-w-7xl">
         <Suspense fallback={<SectionSkeleton label="Loading footer" minHeight="16rem" />}>
-          <Footer />
+          <Footer onReady={() => markSectionReady("contact")} />
         </Suspense>
       </div>
     </div>

@@ -12,9 +12,16 @@ const fadeInProps = (delay = 0) => ({
   viewport: { once: true, amount: 0.35 },
 });
 
-const About = () => {
+const About = ({ onReady }) => {
   const grid2Container = useRef();
+  const readyRef = useRef(false);
   const [hasCSpace, setHasCSpace] = useState(typeof window !== "undefined" ? window.innerWidth > 380 : true);
+
+  useEffect(() => {
+    if (readyRef.current) return;
+    readyRef.current = true;
+    onReady?.();
+  }, [onReady]);
 
   useEffect(() => {
     const handleResize = () => setHasCSpace(window.innerWidth > 380);

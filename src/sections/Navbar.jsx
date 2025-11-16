@@ -3,22 +3,28 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Navigation links
 const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Work", href: "#work" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "#home", detailHref: "/" },
+  { name: "About", href: "#about", detailHref: "/#about" },
+  { name: "Work", href: "#work", detailHref: "/#projects" },
+  { name: "Contact", href: "#contact", detailHref: "/#contact" },
 ];
 
-function Navigation({ onClick, activeSection }) {
+function Navigation({ onClick, activeSection, isDetailPage = false }) {
   return (
     <ul className="flex flex-col gap-6 sm:flex-row sm:gap-4 items-center">
       {navLinks.map((link) => {
-        const isActive = activeSection === link.href.substring(1);
+        const isActive = !isDetailPage && activeSection === link.href.substring(1);
         return (
           <li key={link.name}>
             <a
               href={link.href}
               onClick={(e) => {
+                if (isDetailPage) {
+                  e.preventDefault();
+                  const target = link.detailHref ?? (link.href === "#home" ? "/" : `/${link.href}`);
+                  window.location.assign(target);
+                  return;
+                }
                 if (link.href === "#home") {
                   e.preventDefault();
                   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -53,11 +59,16 @@ function Navigation({ onClick, activeSection }) {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const isDetailPage =
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/" &&
+    window.location.pathname !== "";
+  const [activeSection, setActiveSection] = useState(isDetailPage ? "" : "home");
   const [scrolled, setScrolled] = useState(false);
 
   // Active section detection
   useEffect(() => {
+    if (isDetailPage) return undefined;
     const trackedSections = new Set();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -116,7 +127,7 @@ const Navbar = () => {
       trackedSections.clear();
       window.removeEventListener("scroll", handleScrollBottom);
     };
-  }, []);
+  }, [isDetailPage]);
 
   // Scroll detection
   useEffect(() => {
@@ -140,6 +151,10 @@ const Navbar = () => {
             href="/"
             onClick={(e) => {
               e.preventDefault();
+              if (isDetailPage) {
+                window.location.assign("/");
+                return;
+              }
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className={`pointer-events-auto text-xl font-bold text-purple-300 hover:text-white transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center gap-2 ${
@@ -174,7 +189,7 @@ const Navbar = () => {
             role="navigation"
             aria-label="Main"
           >
-            <Navigation activeSection={activeSection} />
+            <Navigation activeSection={activeSection} isDetailPage={isDetailPage} />
           </nav>
         </div>
       </div>
@@ -194,6 +209,7 @@ const Navbar = () => {
               <Navigation
                 onClick={() => setIsOpen(false)}
                 activeSection={activeSection}
+                isDetailPage={isDetailPage}
               />
             </nav>
           </motion.div>

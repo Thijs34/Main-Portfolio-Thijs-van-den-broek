@@ -5,21 +5,29 @@ import { cn } from "../lib/utils";
 export const PinContainer = ({
   children,
   title,
-  href,
   className,
   containerClassName,
+  onClick,
 }: {
   children: React.ReactNode;
   title?: string;
-  href?: string;
   className?: string;
   containerClassName?: string;
+  onClick?: () => void;
 }) => {
   const [transform, setTransform] = useState(
     "translate(-50%,-50%) rotateX(0deg)"
   );
   const [cardHeight, setCardHeight] = useState<number | undefined>(undefined);
   const cardRef = useRef<HTMLDivElement>(null);
+  const isInteractive = typeof onClick === "function";
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!isInteractive || !onClick) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onClick();
+    }
+  };
 
   const onMouseEnter = () => {
     setTransform("translate(-50%,-50%) rotateX(40deg) scale(0.8)");
@@ -52,12 +60,17 @@ export const PinContainer = ({
   return (
     <div
       className={cn(
-        "relative group/pin z-10 cursor-pointer",
+        "relative group/pin z-10",
+        isInteractive ? "cursor-pointer" : "cursor-default",
         containerClassName
       )}
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
       style={{ height: cardHeight }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
     >
       <div
         style={{
@@ -78,36 +91,31 @@ export const PinContainer = ({
           <div className={cn("relative z-50 w-full", className)}>{children}</div>
         </div>
       </div>
-      <PinPerspective title={title} href={href} />
+      <PinPerspective title={title} />
     </div>
   );
 };
 
 export const PinPerspective = ({
   title,
-  href,
 }: {
   title?: string;
-  href?: string;
 }) => {
   return (
     <motion.div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover/pin:opacity-100 z-[10] transition duration-500">
       <div className="w-full h-full flex-none inset-0">
         {/* Link label positioned at the top of the pin line */}
         <div className="absolute bottom-1/2 inset-x-0 flex justify-center" style={{ transform: "translateY(-100px)" }}>
-          <a
-            href={href}
-            target={"_blank"}
-            rel="noreferrer"
+          <div
             className="relative flex space-x-2 items-center z-10 rounded-full py-0.5 px-4 ring-1 ring-[#7a57db]/30"
             style={{ background: "linear-gradient(to right, #5c33cc, #7a57db)" }}
           >
             <span className="relative z-20 text-white text-xs font-bold inline-block py-0.5">
-              {title}
+              {title ?? "More info"}
             </span>
 
             <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-[#33c2cc]/0 via-[#33c2cc]/90 to-[#33c2cc]/0 transition-opacity duration-500 group-hover/btn:opacity-40"></span>
-          </a>
+          </div>
         </div>
 
         <div

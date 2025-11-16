@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 import { socialMedia } from "../data";
@@ -15,7 +16,19 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-const Footer = () => {
+type FooterProps = {
+  onReady?: () => void;
+};
+
+const Footer = ({ onReady }: FooterProps) => {
+  const readyRef = useRef(false);
+
+  useEffect(() => {
+    if (readyRef.current) return;
+    readyRef.current = true;
+    onReady?.();
+  }, [onReady]);
+
   return (
     <section
       className="relative w-full px-5 sm:px-10 lg:px-[45px]"
