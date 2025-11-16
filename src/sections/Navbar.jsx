@@ -78,7 +78,7 @@ const Navbar = () => {
     const getReferenceLine = () => {
       if (typeof window === "undefined") return 0;
       const viewportHeight = window.innerHeight || document.documentElement?.clientHeight || 1;
-      return viewportHeight * (isCompactScreen() ? 0.45 : 0.35);
+      return viewportHeight * (isCompactScreen() ? 0.3 : 0.35);
     };
 
     const distanceToReference = (entry, referenceLine) => {
@@ -113,8 +113,8 @@ const Navbar = () => {
         }
       },
       {
-        threshold: [0.15, 0.3, 0.5, 0.7],
-        rootMargin: isCompactScreen() ? "-18% 0px -34% 0px" : "-12% 0px -25% 0px",
+        threshold: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
+        rootMargin: isCompactScreen() ? "-10% 0px -40% 0px" : "-12% 0px -25% 0px",
       }
     );
 
@@ -166,11 +166,13 @@ const Navbar = () => {
     <header
       className={`pointer-events-none fixed inset-x-0 top-0 z-50 w-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
         scrolled
-          ? "backdrop-blur-xl backdrop-saturate-150 bg-[#15122a]/70 border-b border-purple-800/20 shadow-md shadow-purple-900/10 py-2"
-          : "bg-transparent py-4"
+          ? "backdrop-blur-xl backdrop-saturate-150 bg-[#15122a]/70 border-b border-purple-800/20 shadow-md shadow-purple-900/10"
+          : "bg-transparent"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-6 sm:px-10">
+      <div className={`mx-auto max-w-7xl px-6 sm:px-10 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+        scrolled ? "py-2" : "py-4"
+      }`}>
         <div className="flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]">
           {/* Logo */}
           <a

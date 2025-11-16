@@ -45,7 +45,7 @@ const Footer = ({ onReady }: FooterProps) => {
 
       {/* CONTENT */}
       <motion.div
-        className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6"
+        className="relative z-0 flex flex-col items-center text-center px-4 sm:px-6"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.4 }}
@@ -92,7 +92,7 @@ const Footer = ({ onReady }: FooterProps) => {
 
       {/* BOTTOM ROW */}
       <motion.div
-        className="relative z-10 mt-16 md:mt-24 flex flex-col md:flex-row justify-between items-center px-4 sm:px-6 max-w-7xl mx-auto"
+        className="relative z-0 mt-16 md:mt-24 flex flex-col md:flex-row justify-between items-center px-4 sm:px-6 max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}

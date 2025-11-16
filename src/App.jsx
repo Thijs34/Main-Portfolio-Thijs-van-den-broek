@@ -10,7 +10,6 @@ import React, {
 import Navbar from "./sections/Navbar";
 import Hero from "./sections/Hero";
 import { Boxes } from "./components/background-boxes";
-import Showcase from "./sections/Showcase";
 
 const About = lazy(() => import("./sections/About"));
 const RecentProjects = lazy(() => import("./sections/RecentProjects"));
