@@ -19,8 +19,13 @@ export const PinContainer = ({
     "translate(-50%,-50%) rotateX(0deg)"
   );
   const [cardHeight, setCardHeight] = useState<number | undefined>(undefined);
+  const [isMobileView, setIsMobileView] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 768;
+  });
   const cardRef = useRef<HTMLDivElement>(null);
   const isInteractive = typeof onClick === "function";
+  const hoverEnabled = !isMobileView;
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (!isInteractive || !onClick) return;
     if (event.key === "Enter" || event.key === " ") {
@@ -30,9 +35,11 @@ export const PinContainer = ({
   };
 
   const onMouseEnter = () => {
+    if (!hoverEnabled) return;
     setTransform("translate(-50%,-50%) rotateX(40deg) scale(0.8)");
   };
   const onMouseLeave = () => {
+    if (!hoverEnabled) return;
     setTransform("translate(-50%,-50%) rotateX(0deg) scale(1)");
   };
 
@@ -56,6 +63,22 @@ export const PinContainer = ({
       window.removeEventListener("resize", update);
     };
   }, []);
+
+  useEffect(() => {
+    const updateViewport = () => {
+      if (typeof window === "undefined") return;
+      setIsMobileView(window.innerWidth < 768);
+    };
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => window.removeEventListener("resize", updateViewport);
+  }, []);
+
+  useEffect(() => {
+    if (!hoverEnabled) {
+      setTransform("translate(-50%,-50%) rotateX(0deg) scale(1)");
+    }
+  }, [hoverEnabled]);
 
   return (
     <div
@@ -91,16 +114,19 @@ export const PinContainer = ({
           <div className={cn("relative z-50 w-full", className)}>{children}</div>
         </div>
       </div>
-      <PinPerspective title={title} />
+      <PinPerspective title={title} enabled={hoverEnabled} />
     </div>
   );
 };
 
 export const PinPerspective = ({
   title,
+  enabled = true,
 }: {
   title?: string;
+  enabled?: boolean;
 }) => {
+  if (!enabled) return null;
   return (
     <motion.div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover/pin:opacity-100 z-[10] transition duration-500">
       <div className="w-full h-full flex-none inset-0">

@@ -145,6 +145,19 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
                         </span>
                       </a>
                     </div>
+                    {item.detailPath ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigateToDetail();
+                        }}
+                        className="sm:hidden w-full rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white/90 transition hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/20 focus-visible:ring-offset-[#050714]"
+                        aria-label={`Open detailed case study for ${item.title}`}
+                      >
+                        More info
+                      </button>
+                    ) : null}
                   </div>
                     </PinContainer>
                   </div>

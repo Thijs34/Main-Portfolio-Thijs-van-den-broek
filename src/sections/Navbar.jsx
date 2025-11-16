@@ -69,16 +69,42 @@ const Navbar = () => {
   // Active section detection
   useEffect(() => {
     if (isDetailPage) return undefined;
+
+    const isCompactScreen = () =>
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(max-width: 768px)").matches;
+
+    const getReferenceLine = () => {
+      if (typeof window === "undefined") return 0;
+      const viewportHeight = window.innerHeight || document.documentElement?.clientHeight || 1;
+      return viewportHeight * (isCompactScreen() ? 0.45 : 0.35);
+    };
+
+    const distanceToReference = (entry, referenceLine) => {
+      const { top, height } = entry.boundingClientRect;
+      const entryCenter = top + height / 2;
+      return Math.abs(entryCenter - referenceLine);
+    };
+
     const trackedSections = new Set();
     const observer = new IntersectionObserver(
       (entries) => {
+        const referenceLine = getReferenceLine();
         const visibleEntry = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => {
-            if (b.intersectionRatio === a.intersectionRatio) {
-              return a.target.offsetTop - b.target.offsetTop;
+            const distanceA = distanceToReference(a, referenceLine);
+            const distanceB = distanceToReference(b, referenceLine);
+
+            if (distanceA === distanceB) {
+              if (b.intersectionRatio === a.intersectionRatio) {
+                return a.target.offsetTop - b.target.offsetTop;
+              }
+              return b.intersectionRatio - a.intersectionRatio;
             }
-            return b.intersectionRatio - a.intersectionRatio;
+
+            return distanceA - distanceB;
           })[0];
 
         if (visibleEntry) {
@@ -87,8 +113,8 @@ const Navbar = () => {
         }
       },
       {
-        threshold: [0.2, 0.35, 0.5, 0.7],
-        rootMargin: "-12% 0px -25% 0px",
+        threshold: [0.15, 0.3, 0.5, 0.7],
+        rootMargin: isCompactScreen() ? "-18% 0px -34% 0px" : "-12% 0px -25% 0px",
       }
     );
 

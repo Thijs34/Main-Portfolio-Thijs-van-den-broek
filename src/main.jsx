@@ -1,11 +1,18 @@
-import { StrictMode } from 'react'
+import { StrictMode, Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import FaceAwareMoreInfo from './pages/FaceAwareMoreInfo'
-import EPostProMoreInfo from './pages/EPostProMoreInfo'
-import B2BMagentoMoreInfo from './pages/B2BMagentoMoreInfo'
-import AwwwardsMoreInfo from './pages/AwwwardsMoreInfo'
+
+const FaceAwareMoreInfo = lazy(() => import('./pages/FaceAwareMoreInfo'))
+const EPostProMoreInfo = lazy(() => import('./pages/EPostProMoreInfo'))
+const B2BMagentoMoreInfo = lazy(() => import('./pages/B2BMagentoMoreInfo'))
+const AwwwardsMoreInfo = lazy(() => import('./pages/AwwwardsMoreInfo'))
+
+const RouteFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#030412] text-white">
+    <p className="text-base font-medium tracking-wide text-white/70">Loading…</p>
+  </div>
+)
 
 const resolveRouteComponent = () => {
   if (typeof window === 'undefined') return <App />;
@@ -27,6 +34,8 @@ const resolveRouteComponent = () => {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {resolveRouteComponent()}
+    <Suspense fallback={<RouteFallback />}>
+      {resolveRouteComponent()}
+    </Suspense>
   </StrictMode>,
 )
