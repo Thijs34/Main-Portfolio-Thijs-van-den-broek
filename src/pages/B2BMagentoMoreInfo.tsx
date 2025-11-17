@@ -129,7 +129,7 @@ const B2BMagentoMoreInfo = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#030412] text-white">
+    <div className="min-h-screen bg-[#0a0f1c] text-white">
       <Navbar />
       <main className="pt-28 pb-20 space-y-24">
         {/* Hero Section */}
