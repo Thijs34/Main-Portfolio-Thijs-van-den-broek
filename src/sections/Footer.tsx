@@ -56,8 +56,8 @@ const Footer = ({ onReady }: FooterProps) => {
           className="mt-4 sm:mt-6 font-bold text-[26px] sm:text-[32px] md:text-[42px] lg:text-[52px] xl:text-[62px] leading-snug md:leading-tight text-[var(--color-white)] max-w-[900px]"
           variants={itemVariants}
         >
-          Ready to take <span className="text-[var(--color-purple-400)]">your</span>{" "}
-          digital presence to the next level?
+          Ready to make <span className="text-[var(--color-purple-400)]">your</span>{" "}
+          next project stand out?
         </motion.h1>
 
         {/* Subtext */}
@@ -65,7 +65,7 @@ const Footer = ({ onReady }: FooterProps) => {
           className="text-[var(--color-white)]/70 mt-4 sm:mt-6 text-sm sm:text-base max-w-[650px]"
           variants={itemVariants}
         >
-          Reach out to me today and let’s discuss how I can help you achieve your goals.
+          Let’s get in touch and explore how I can make a strong impact on your team.
         </motion.p>
 
         {/* BUTTON — LinkedIn */}
