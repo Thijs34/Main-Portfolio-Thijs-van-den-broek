@@ -88,6 +88,7 @@ const Navbar = () => {
       return Math.abs(entryCenter - referenceLine);
     };
 
+    let hashUpdateTimeout = null;
     const trackedSections = new Set();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -111,6 +112,18 @@ const Navbar = () => {
         if (visibleEntry) {
           const nextId = visibleEntry.target.id;
           setActiveSection((current) => (current === nextId ? current : nextId));
+          
+          // Debounce URL hash updates to prevent flickering
+          if (hashUpdateTimeout) {
+            clearTimeout(hashUpdateTimeout);
+          }
+          hashUpdateTimeout = setTimeout(() => {
+            const newHash = nextId === 'home' ? '' : `#${nextId}`;
+            const currentHash = window.location.hash;
+            if (currentHash !== newHash) {
+              window.history.replaceState({}, '', newHash || '/');
+            }
+          }, 150);
         }
       },
       {
@@ -142,13 +155,23 @@ const Navbar = () => {
       const { offsetHeight } = document.documentElement;
       const nearBottom = innerHeight + scrollY >= offsetHeight - 40;
       if (nearBottom) {
-        setActiveSection((current) => (current === "contact" ? current : "contact"));
+        setActiveSection((current) => {
+          if (current !== "contact") {
+            // Update URL hash when reaching bottom
+            window.history.replaceState({}, '', '#contact');
+            return "contact";
+          }
+          return current;
+        });
       }
     };
 
     window.addEventListener("scroll", handleScrollBottom, { passive: true });
 
     return () => {
+      if (hashUpdateTimeout) {
+        clearTimeout(hashUpdateTimeout);
+      }
       mutationObserver.disconnect();
       observer.disconnect();
       trackedSections.clear();
