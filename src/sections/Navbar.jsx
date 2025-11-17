@@ -28,6 +28,7 @@ function Navigation({ onClick, activeSection, isDetailPage = false }) {
                 if (link.href === "#home") {
                   e.preventDefault();
                   window.scrollTo({ top: 0, behavior: "smooth" });
+                  window.history.pushState({}, '', '/');
                 }
                 onClick && onClick(e);
                 e.currentTarget.blur();
@@ -184,6 +185,7 @@ const Navbar = () => {
                 return;
               }
               window.scrollTo({ top: 0, behavior: "smooth" });
+              window.history.pushState({}, '', '/');
             }}
             className={`pointer-events-auto text-xl font-bold text-purple-300 hover:text-white transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] flex items-center gap-2 ${
               scrolled ? "scale-95" : "scale-100"
