@@ -1,58 +1,31 @@
 'use client';
-import React, { useMemo, useCallback } from "react";
-import { motion } from "framer-motion";
+import React, { useMemo } from "react";
 import { cn } from "../lib/utils";
 
-const ROW_COUNT = 120;
-const COL_COUNT = 90;
+const ROW_COUNT = 80;
+const COL_COUNT = 60;
 const ROWS = Array.from({ length: ROW_COUNT }, (_, index) => index);
 const COLS = Array.from({ length: COL_COUNT }, (_, index) => index);
-const HOVER_COLORS = [
-  "rgb(168, 85, 247)",
-  "rgb(139, 92, 246)",
-  "rgb(99, 102, 241)",
-  "rgb(59, 130, 246)",
-  "rgb(232, 121, 249)",
-  "rgb(236, 72, 153)",
-  "rgb(190, 110, 255)",
-  "rgb(216, 180, 254)",
-  "rgb(196, 181, 253)",
-  "rgb(124, 58, 237)",
-];
 const SVG_COLOR = "rgba(139,92,246,0.06)";
 const BORDER_COLOR = "rgba(139, 92, 246, 0.12)";
 
 export const Boxes = React.memo(({ className, ...rest }) => {
-  const getRandomHoverColor = useCallback(() => {
-    return HOVER_COLORS[Math.floor(Math.random() * HOVER_COLORS.length)];
-  }, []);
-
   const gridContent = useMemo(() => {
     return ROWS.map((rowIndex) => (
-      <motion.div
+      <div
         key={`row${rowIndex}`}
-        className="w-16 h-8 border-l"
+        className="w-16 h-8 border-l box-row"
         style={{ borderColor: BORDER_COLOR, borderWidth: "1px" }}
       >
         {COLS.map((colIndex) => {
           const showSvg = colIndex % 2 === 0 && rowIndex % 2 === 0;
           return (
-            <motion.div
-              whileHover={{
-                backgroundColor: getRandomHoverColor(),
-                transition: { duration: 0, ease: "linear" },
-              }}
-              animate={{
-                backgroundColor: "rgba(0,0,0,0)",
-                transition: { duration: 0.4, ease: "easeOut" },
-              }}
+            <div
               key={`col${colIndex}`}
-              className="w-16 h-8 border-r border-t relative"
+              className="w-16 h-8 border-r border-t relative box-cell"
               style={{
                 borderColor: BORDER_COLOR,
                 borderWidth: "1px",
-                backgroundColor: "rgba(0,0,0,0)",
-                willChange: "auto",
               }}
             >
               {showSvg && (
@@ -71,12 +44,12 @@ export const Boxes = React.memo(({ className, ...rest }) => {
                   />
                 </svg>
               )}
-            </motion.div>
+            </div>
           );
         })}
-      </motion.div>
+      </div>
     ));
-  }, [getRandomHoverColor]);
+  }, []);
 
   return (
     <div
@@ -89,6 +62,25 @@ export const Boxes = React.memo(({ className, ...rest }) => {
       )}
       {...rest}
     >
+      <style>{`
+        .box-cell {
+          background-color: rgba(0,0,0,0);
+          transition: background-color 0.4s ease-out;
+        }
+        .box-cell:hover {
+          transition: background-color 0s linear;
+        }
+        .box-cell:nth-child(10n+1):hover { background-color: rgb(168, 85, 247); }
+        .box-cell:nth-child(10n+2):hover { background-color: rgb(139, 92, 246); }
+        .box-cell:nth-child(10n+3):hover { background-color: rgb(99, 102, 241); }
+        .box-cell:nth-child(10n+4):hover { background-color: rgb(59, 130, 246); }
+        .box-cell:nth-child(10n+5):hover { background-color: rgb(232, 121, 249); }
+        .box-cell:nth-child(10n+6):hover { background-color: rgb(236, 72, 153); }
+        .box-cell:nth-child(10n+7):hover { background-color: rgb(190, 110, 255); }
+        .box-cell:nth-child(10n+8):hover { background-color: rgb(216, 180, 254); }
+        .box-cell:nth-child(10n+9):hover { background-color: rgb(196, 181, 253); }
+        .box-cell:nth-child(10n+0):hover { background-color: rgb(124, 58, 237); }
+      `}</style>
       {gridContent}
     </div>
   );
