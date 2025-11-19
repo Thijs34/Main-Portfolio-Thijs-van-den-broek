@@ -2,8 +2,8 @@
 import React, { useMemo } from "react";
 import { cn } from "../lib/utils";
 
-const ROW_COUNT = 80;
-const COL_COUNT = 60;
+const ROW_COUNT = 150;
+const COL_COUNT = 100;
 const ROWS = Array.from({ length: ROW_COUNT }, (_, index) => index);
 const COLS = Array.from({ length: COL_COUNT }, (_, index) => index);
 const SVG_COLOR = "rgba(139,92,246,0.06)";

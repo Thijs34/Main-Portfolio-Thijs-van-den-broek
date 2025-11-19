@@ -77,9 +77,9 @@ export default function App() {
   return (
     <div className="relative w-full min-h-screen bg-[#0a0f1c] overflow-x-hidden">
       {/* Homepage with Boxes background */}
-      <div className="relative w-full h-screen overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <Boxes className="absolute inset-0 opacity-90" />
+      <div className="relative w-full min-h-screen overflow-hidden">
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <Boxes className="absolute inset-0 w-full h-full opacity-90" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1c]/50 via-transparent to-[#0a0f1c]/70 pointer-events-none" />
         </div>
         <div className="pointer-events-none container mx-auto max-w-8xl px-4 sm:px-6 relative z-10 h-full flex flex-col">
