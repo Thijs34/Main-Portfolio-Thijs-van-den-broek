@@ -5,6 +5,7 @@ import { SiCss3, SiFigma, SiHtml5, SiJavascript, SiNodedotjs, SiOpenai } from "r
 import type { IconType } from "react-icons";
 
 import Navbar from "../sections/Navbar";
+import { navigateTo } from "../lib/pageTransition";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
 import { projects, ePostProDetail } from "../data";
@@ -107,7 +108,7 @@ const SectionHeader = ({
     <p className="text-xs uppercase tracking-[0.35em] text-[#7a57db]">{eyebrow}</p>
     <h2 className="text-heading text-left">{title}</h2>
     {description ? (
-      <p className="text-base text-white/80 leading-relaxed">{description}</p>
+      <p className="text-base text-white/80 leading-relaxed max-w-3xl">{description}</p>
     ) : null}
   </div>
 );
@@ -125,7 +126,7 @@ const EPostProMoreInfo = () => {
   const epostProject = useMemo(() => projects.find((project) => project.id === 2), []);
   const demoShareLink = ePostProDetail.demoVideoLink ?? "https://youtu.be/7Bp4MxY0FbI";
   const demoEmbedUrl = extractYouTubeEmbedUrl(demoShareLink, "7Bp4MxY0FbI");
-  const liveUrl = ePostProDetail.liveUrl ?? epostProject?.link ?? "https://e-postpro.vercel.app/";
+  const liveUrl = ePostProDetail.liveUrl ?? epostProject?.link ?? "https://youtu.be/7Bp4MxY0FbI";
 
   const handleWatchDemo = () => {
     demoRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -140,7 +141,7 @@ const EPostProMoreInfo = () => {
   };
 
   const handleReturn = () => {
-    window.location.href = "/#projects";
+    navigateTo("/#projects");
   };
 
   return (
@@ -180,7 +181,7 @@ const EPostProMoreInfo = () => {
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
               <SectionHeader eyebrow="overview" title="Four-week sprint to calm the inbox" />
-              <p className="text-base leading-relaxed text-white/80">{ePostProDetail.overviewText}</p>
+              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{ePostProDetail.overviewText}</p>
             </motion.div>
           </div>
         </section>
@@ -238,7 +239,8 @@ const EPostProMoreInfo = () => {
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                <div className="mt-6 space-y-3">
+                <hr className="border-white/10 mt-4" />
+                <div className="mt-4 space-y-3">
                   <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
                   <ul className="list-disc space-y-2 pl-5 text-white/80">
                     {ePostProDetail.skillsFocus.map((item) => (
@@ -274,7 +276,7 @@ const EPostProMoreInfo = () => {
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps()}>
             <SectionHeader eyebrow="Takeaway" title="What I learned" />
-            <p className="text-base leading-relaxed text-white/80">{ePostProDetail.impactDescription}</p>
+            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{ePostProDetail.impactDescription}</p>
           </motion.div>
         </section>
 
@@ -286,13 +288,6 @@ const EPostProMoreInfo = () => {
               icon={<FaPlay />}
               position="left"
               handleClick={handleWatchDemo}
-              otherClasses="md:w-full md:mt-0"
-            />
-            <MagicButton
-              title="Open Live App"
-              icon={<FaLocationArrow />}
-              position="left"
-              handleClick={handleOpenLive}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton

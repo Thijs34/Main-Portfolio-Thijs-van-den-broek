@@ -5,6 +5,7 @@ import { SiCss3, SiFigma, SiHtml5, SiJavascript, SiNodedotjs } from "react-icons
 import type { IconType } from "react-icons";
 
 import Navbar from "../sections/Navbar";
+import { navigateTo } from "../lib/pageTransition";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
 import { projects, faceAwareDetail } from "../data";
@@ -115,7 +116,7 @@ const SectionHeader = ({
     <p className="text-xs uppercase tracking-[0.35em] text-[#7a57db]">{eyebrow}</p>
     <h2 className="text-heading text-left">{title}</h2>
     {description ? (
-      <p className="text-base text-white/80 leading-relaxed">{description}</p>
+      <p className="text-base text-white/80 leading-relaxed max-w-3xl">{description}</p>
     ) : null}
   </div>
 );
@@ -145,7 +146,7 @@ const FaceAwareMoreInfo = () => {
   };
 
   const handleReturn = () => {
-    window.location.href = "/#projects";
+    navigateTo("/#projects");
   };
 
   return (
@@ -193,7 +194,7 @@ const FaceAwareMoreInfo = () => {
                 eyebrow="overview"
                 title="Immersive literacy for Night of the Nerds"
               />
-              <p className="text-base leading-relaxed text-white/80">{faceAwareDetail.overviewText}</p>
+              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{faceAwareDetail.overviewText}</p>
             </motion.div>
           </div>
         </section>
@@ -267,7 +268,8 @@ const FaceAwareMoreInfo = () => {
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                <div className="mt-6 space-y-3">
+                <hr className="border-white/10 mt-4" />
+                <div className="mt-4 space-y-3">
                   <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
                   <ul className="list-disc space-y-2 pl-5 text-white/80">
                     {faceAwareDetail.skillsFocus.map((item) => (
@@ -303,7 +305,7 @@ const FaceAwareMoreInfo = () => {
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps()}>
             <SectionHeader eyebrow="Impact" title="What students took away" />
-            <p className="text-base leading-relaxed text-white/80">{faceAwareDetail.impactDescription}</p>
+            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{faceAwareDetail.impactDescription}</p>
           </motion.div>
         </section>
 

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaArrowLeft, FaLocationArrow } from "react-icons/fa6";
+import { FaArrowLeft, FaLocationArrow, FaMagnifyingGlassPlus } from "react-icons/fa6";
 import { SiCss3, SiFigma, SiHtml5 } from "react-icons/si";
 
 import Navbar from "../sections/Navbar";
+import { navigateTo } from "../lib/pageTransition";
 import MagicButton from "../components/MagicButton";
+import ImageLightbox from "../components/ImageLightbox";
 import { awwwardsDetail } from "../data";
 
 const fadeInProps = (delay = 0) => ({
@@ -20,12 +22,46 @@ const toolIcons = [
   { name: "Figma", Icon: SiFigma, color: "#f24e1e" },
 ];
 
-const MediaTile = ({ label, src, aspect = "16 / 9" }: { label: string; src: string; aspect?: string }) => (
+type LightboxShot = { label: string; src: string };
+
+const MediaTile = ({
+  label,
+  src,
+  aspect = "16 / 9",
+  onExpand,
+}: {
+  label: string;
+  src: string;
+  aspect?: string;
+  onExpand?: (shot: LightboxShot) => void;
+}) => (
   <figure
-    className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24]"
+    role={onExpand ? "button" : undefined}
+    tabIndex={onExpand ? 0 : undefined}
+    onClick={() => onExpand?.({ label, src })}
+    onKeyDown={(event) => {
+      if (!onExpand) return;
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        onExpand({ label, src });
+      }
+    }}
+    aria-label={onExpand ? `View larger version of ${label}` : undefined}
+    className="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-[#7a57db]/60 focus:ring-offset-2 focus:ring-offset-[#050714]"
     style={{ aspectRatio: aspect }}
   >
-    <img src={src} alt={label} className="h-full w-full object-cover" loading="lazy" />
+    <img
+      src={src}
+      alt={label}
+      className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+      loading="lazy"
+    />
+    {onExpand ? (
+      <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-[10px] uppercase tracking-[0.3em] text-white/80">
+        <FaMagnifyingGlassPlus className="h-3.5 w-3.5" />
+        Zoom
+      </span>
+    ) : null}
     <figcaption className="absolute left-4 bottom-4 rounded-full bg-black/60 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/80">
       {label}
     </figcaption>
@@ -46,11 +82,12 @@ const SectionHeader = ({
   <div className={`space-y-3 ${fullWidth ? "" : "max-w-3xl"}`}>
     <p className="text-xs uppercase tracking-[0.35em] text-[#7a57db]">{eyebrow}</p>
     <h2 className="text-heading text-left">{title}</h2>
-    {description ? <p className="text-base text-white/80 leading-relaxed">{description}</p> : null}
+    {description ? <p className="text-base text-white/80 leading-relaxed max-w-3xl">{description}</p> : null}
   </div>
 );
 
 const AwwwardsMoreInfo = () => {
+  const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
   const liveUrl = awwwardsDetail.liveUrl ?? "https://i523591.hera.fontysict.net/awwwards/";
 
   const handleVisitSite = () => {
@@ -58,7 +95,7 @@ const AwwwardsMoreInfo = () => {
   };
 
   const handleReturn = () => {
-    window.location.href = "/#projects";
+    navigateTo("/#projects");
   };
 
   return (
@@ -91,7 +128,7 @@ const AwwwardsMoreInfo = () => {
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
               <SectionHeader eyebrow="overview" title="Two-week fundamentals sprint" />
-              <p className="text-base leading-relaxed text-white/80">{awwwardsDetail.overviewText}</p>
+              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{awwwardsDetail.overviewText}</p>
             </motion.div>
           </div>
         </section>
@@ -108,10 +145,14 @@ const AwwwardsMoreInfo = () => {
               />
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {awwwardsDetail.mediaShots.map((shot) => (
-                  <MediaTile key={shot.label} {...shot} />
+                  <MediaTile key={shot.label} {...shot} onExpand={setLightboxImage} />
                 ))}
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">{awwwardsDetail.layoutHighlights}</p>
+              {awwwardsDetail.layoutHighlights ? (
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4">
+                  <p className="text-sm text-white/70 leading-relaxed max-w-3xl">{awwwardsDetail.layoutHighlights}</p>
+                </div>
+              ) : null}
             </motion.div>
           </div>
         </section>
@@ -126,7 +167,8 @@ const AwwwardsMoreInfo = () => {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <div className="mt-6 space-y-3">
+              <hr className="border-white/10 mt-4" />
+              <div className="mt-4 space-y-3">
                 <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
                 <ul className="list-disc space-y-2 pl-5 text-white/80">
                   {awwwardsDetail.skillsFocus.map((item) => (
@@ -154,7 +196,7 @@ const AwwwardsMoreInfo = () => {
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps()}>
             <SectionHeader eyebrow="Takeaway" title="What I gained" />
-            <p className="text-base leading-relaxed text-white/80">{awwwardsDetail.impactDescription}</p>
+            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{awwwardsDetail.impactDescription}</p>
           </motion.div>
         </section>
 
@@ -178,6 +220,7 @@ const AwwwardsMoreInfo = () => {
           </motion.div>
         </section>
       </main>
+      <ImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
     </div>
   );
 };

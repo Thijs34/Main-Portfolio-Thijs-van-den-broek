@@ -7,6 +7,9 @@ const FaceAwareMoreInfo = lazy(() => import('./pages/FaceAwareMoreInfo'))
 const EPostProMoreInfo = lazy(() => import('./pages/EPostProMoreInfo'))
 const B2BMagentoMoreInfo = lazy(() => import('./pages/B2BMagentoMoreInfo'))
 const AwwwardsMoreInfo = lazy(() => import('./pages/AwwwardsMoreInfo'))
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'))
+const InnoBeweegLabMoreInfo = lazy(() => import('./pages/InnoBeweegLabMoreInfo'))
+const MusicSyncMoreInfo = lazy(() => import('./pages/MusicSyncMoreInfo'))
 
 const RouteFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-[#030412] text-white">
@@ -28,6 +31,15 @@ const resolveRouteComponent = () => {
   }
   if (normalizedPath.toLowerCase().endsWith('/awwwards') || normalizedPath === '/awwwards') {
     return <AwwwardsMoreInfo />;
+  }
+  if (normalizedPath.toLowerCase().endsWith('/projects') || normalizedPath === '/projects') {
+    return <ProjectsPage />;
+  }
+  if (normalizedPath.toLowerCase().endsWith('/innobeweeglab') || normalizedPath === '/innobeweeglab') {
+    return <InnoBeweegLabMoreInfo />;
+  }
+  if (normalizedPath.toLowerCase().endsWith('/musicsync') || normalizedPath === '/musicsync') {
+    return <MusicSyncMoreInfo />;
   }
   return <App />;
 };

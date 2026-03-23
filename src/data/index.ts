@@ -7,6 +7,9 @@ type Project = {
   link?: string;
   pinLabel?: string;
   detailPath?: string;
+  ctaLabel?: string;
+  comingSoon?: boolean;
+  featured?: boolean;
 };
 
 export const navItems = [
@@ -26,6 +29,7 @@ export const projects: Project[] = [
     link: "https://youtu.be/PSMM_yQ7abI",
     pinLabel: "youtu.be/PSMM_yQ7abI",
     detailPath: "/faceaware",
+    featured: true,
   },
   {
     id: 2,
@@ -36,6 +40,8 @@ export const projects: Project[] = [
     link: "https://e-postpro.vercel.app/",
     pinLabel: "e-postpro.vercel.app",
     detailPath: "/epostpro",
+    ctaLabel: "Watch Video",
+    featured: true,
   },
   {
     id: 3,
@@ -46,6 +52,7 @@ export const projects: Project[] = [
     link: "https://youtu.be/9K0Sbo8FQaY?si=LFdOgUY49NCTnQV0",
     pinLabel: "youtu.be/9K0Sbo8FQaY",
     detailPath: "/b2b-magento",
+    featured: true,
   },
   {
     id: 4,
@@ -56,6 +63,35 @@ export const projects: Project[] = [
     link: "https://i523591.hera.fontysict.net/awwwards/",
     pinLabel: "i523591.hera.fontysict.net",
     detailPath: "/awwwards",
+    featured: true,
+  },
+  {
+    id: 5,
+    title: "InnoBeweegLab Observation App",
+    des: "Digital fieldwork tool replacing paper-based observation forms at InnoBeweegLab, designed for outdoor use and now actively used in production.",
+    img: "/assets/Innobeweeglab/mockup.png",
+    iconLists: ["/assets/logos/Flutter.svg", "/assets/logos/Figma.svg", "/assets/logos/Tailwind.svg", "/assets/logos/Gitlab.svg"],
+    link: "https://youtu.be/OjFUQKNWjEs",
+    pinLabel: "youtu.be/OjFUQKNWjEs",
+    detailPath: "/innobeweeglab",
+  },
+  {
+    id: 6,
+    title: "MusicSync",
+    des: "Personal tool for transferring playlists between Spotify, YouTube Music, and SoundCloud. Keeping libraries in sync across platforms should not be manual work.",
+    img: "/assets/MusicSync/homepage.png",
+    iconLists: ["/assets/logos/React.svg", "/assets/logos/Tailwind.svg", "/assets/logos/JavaScript.svg", "/assets/logos/Figma.svg"],
+    link: "https://youtu.be/ekm5upEG02E",
+    pinLabel: "youtu.be/ekm5upEG02E",
+    detailPath: "/musicsync",
+  },
+  {
+    id: 7,
+    title: "AI Art Critic",
+    des: "A model that analyses art pieces and generates an informed opinion, covering composition, style, context, and emotional tone.",
+    img: "",
+    iconLists: [],
+    comingSoon: true,
   },
 ];
 
@@ -212,3 +248,82 @@ export const socialMedia = [
     link: "https://youtube.com/@thijsvandenbroek872?si=3WX0qGm13Ek-lzfo"
   },
 ];
+
+export const musicSyncDetail = {
+  heroTitle: "MusicSync",
+  heroDescription:
+    "A personal tool for transferring playlists between streaming platforms. Built because I use Spotify, YouTube Music, and SoundCloud and constantly had to rebuild the same playlists by hand.",
+  demoVideoLink: "https://youtu.be/ekm5upEG02E",
+  overviewText:
+    "MusicSync started as a personal frustration. I use multiple streaming platforms depending on where I am or what I am doing, and keeping playlists aligned between them was always a chore. There was no clean tool that handled it well, so I built one. The app connects to your accounts, reads your playlists, and lets you transfer them across platforms in a few clicks. It currently supports Spotify, YouTube Music, and SoundCloud, with more platforms planned as the project grows.",
+  howItWorksDescription:
+    "Select the source platform, pick the playlist you want to transfer, choose the destination, and the app handles the rest. Tracks are matched by name and artist across platforms, and any that cannot be found automatically are flagged so you can resolve them manually.",
+  toolsDescription:
+    "Built with React and Tailwind CSS for the frontend, with vanilla JavaScript handling the platform API integrations. Designed in Figma before development to keep the interface clean and focused.",
+  platforms: [
+    { name: "Spotify",       color: "#1DB954" },
+    { name: "YouTube Music", color: "#FF0000" },
+    { name: "SoundCloud",    color: "#FF5500" },
+  ],
+  roleItems: [
+    "Designed and built the full application from scratch",
+    "Integrated the Spotify, YouTube Music, and SoundCloud APIs",
+    "Designed the UI in Figma with a focus on simplicity",
+    "Ongoing development: matching logic, error handling, new platforms",
+  ],
+  skillsFocus: [
+    "Third-party API integration and OAuth flows",
+    "Frontend development with React and Tailwind CSS",
+    "UX design for a multi-step transfer workflow",
+  ],
+  statusNote:
+    "MusicSync is an ongoing personal project. The core transfer flow works across the three supported platforms and the foundation is solid. Next up is improving track-matching accuracy and adding Apple Music and Tidal support.",
+  screenshots: [
+    { label: "Home", src: "/assets/MusicSync/homepage.png" },
+    { label: "Select platform", src: "/assets/MusicSync/music-select.png" },
+    { label: "Choose playlist", src: "/assets/MusicSync/playlist-transfer-select.png" },
+    { label: "Transfer in progress", src: "/assets/MusicSync/transfer.png" },
+  ],
+};
+
+export const innoBeweegLabDetail = {
+  heroTitle: "InnoBeweegLab Observation Tool",
+  heroDescription:
+    "A digital fieldwork app that replaced paper observation forms at InnoBeweegLab, built for researchers working outdoors and adopted by the client the day it shipped.",
+  promoVideoLink: "https://youtu.be/OjFUQKNWjEs",
+  demoVideoLink: "https://youtu.be/IUqY6SqDL2c",
+  heroImage: "/assets/Innobeweeglab/Observe-individual.png",
+  overviewText:
+    "InnoBeweegLab researches how people use public spaces (parks, playgrounds, sports parks) and shares those insights with municipalities to improve local facilities. When I joined the project, observers were writing everything down on paper during fieldwork and re-entering it all into Excel afterwards. Data was entered twice, mistakes were caught too late, and analysis could only start once fieldwork was completely finished. The goal was to build a digital observation tool that would fit into that fieldwork context: quick to use, readable in sunlight, and reliable on any device. On top of the core app, I also developed early concepts for involving the community more directly, an extension the client was open to exploring.",
+  observerDescription:
+    "Observers log in, open their assigned project, and start recording in real time. The interface is stripped back on purpose: large tap targets, clear labels, minimal options. Visitor counts, facility usage, time spent, and short interview notes, all captured in one flow and validated immediately so nothing gets missed.",
+  adminDescription:
+    "Admins have full control over the system. They create and manage projects, define which observation fields appear in the app, monitor incoming data as observations happen, and export results when a session is done. Everything that used to happen in Excel after the fact now happens live.",
+  toolsDescription:
+    "Built with Flutter so the app runs natively on any device without a separate installation. Designed entirely in Figma before development started, styled with Tailwind CSS, and version-controlled on GitLab throughout the project.",
+  roleItems: [
+    "UX research: user interviews, persona development, and context analysis",
+    "Designed the full observer and admin interface in Figma",
+    "Developed the complete web application front to back",
+    "Deployed and configured the system at InnoBeweegLab",
+    "Produced early community-involvement concepts as a follow-up layer",
+  ],
+  skillsFocus: [
+    "Outdoor-first UX design (sunlight, time pressure, varying devices)",
+    "User research and stakeholder alignment",
+    "Full-stack web development",
+    "Data usefulness analysis: separating signal from noise in existing reports",
+  ],
+  impactDescription:
+    "Emma van Dijk, research lead at InnoBeweegLab, liked the app enough to ask me to deploy it at their organisation. It is now in active use, replacing the paper-based process entirely. Observers spend less time on data entry, project leads no longer manually clean Excel files, and errors that used to go unnoticed until after fieldwork are caught the moment they happen.",
+  observerShots: [
+    { label: "Group observation", src: "/assets/Innobeweeglab/observation-group.png" },
+    { label: "Individual observation", src: "/assets/Innobeweeglab/Observe-individual.png" },
+    { label: "Location map", src: "/assets/Innobeweeglab/maps.png" },
+  ],
+  adminShots: [
+    { label: "Admin dashboard", src: "/assets/Innobeweeglab/admin-main.png" },
+    { label: "Data overview",   src: "/assets/Innobeweeglab/admin-view-data.png" },
+    { label: "Edit project",    src: "/assets/Innobeweeglab/admin-edit-project.png" },
+  ],
+};
