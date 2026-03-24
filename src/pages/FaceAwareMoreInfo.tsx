@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaLocationArrow, FaPlay, FaMagnifyingGlassPlus } from "react-icons/fa6";
 import { SiCss3, SiFigma, SiHtml5, SiJavascript, SiNodedotjs } from "react-icons/si";
@@ -133,23 +133,28 @@ const FaceAwareMoreInfo = () => {
   const { t, lang } = useLanguage();
   const d = lang === "nl" ? faceAwareDetailNL : faceAwareDetail;
   const trailerRef = useRef<HTMLDivElement | null>(null);
+  const demoVideoRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
+  const [cameFromAllProjects, setCameFromAllProjects] = useState(false);
   const faceAwareProject = useMemo(() => projects.find((project) => project.id === 1), []);
   const trailerShareLink = faceAwareProject?.link ?? "https://youtu.be/PSMM_yQ7abI";
   const trailerUrl = extractYouTubeEmbedUrl(trailerShareLink, "PSMM_yQ7abI");
-  const demoShareLink = "https://youtu.be/hMK0f0T0WjY";
-  const demoEmbedUrl = extractYouTubeEmbedUrl(demoShareLink, "hMK0f0T0WjY");
+  const demoEmbedUrl = extractYouTubeEmbedUrl("https://youtu.be/hMK0f0T0WjY", "hMK0f0T0WjY");
+
+  useEffect(() => {
+    setCameFromAllProjects(sessionStorage.getItem("cameFrom") === "allProjects");
+  }, []);
 
   const handleWatchTrailer = () => {
     trailerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleViewDemo = () => {
-    window.open(demoShareLink, "_blank", "noopener,noreferrer");
+    demoVideoRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleReturn = () => {
-    navigateTo("/#projects");
+    navigateTo(cameFromAllProjects ? "/projects" : "/#projects");
   };
 
   return (
@@ -162,7 +167,18 @@ const FaceAwareMoreInfo = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24]" />
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent mix-blend-screen opacity-10" />
           </div>
-          <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+          <div className="c-space relative z-10">
+            {cameFromAllProjects && (
+              <button
+                type="button"
+                onClick={() => navigateTo("/projects")}
+                className="group inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors duration-200 focus-visible:outline-none mb-8"
+              >
+                <FaArrowLeft className="w-3 h-3 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                {t("detailPage.backToAllProjects")}
+              </button>
+            )}
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <motion.div className="space-y-5" {...fadeInProps()}>
               <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
               <h1 className="text-4xl font-bold leading-tight md:text-5xl">{d.heroTitle}</h1>
@@ -184,6 +200,7 @@ const FaceAwareMoreInfo = () => {
               </div>
               <p className="text-sm text-white/75 leading-relaxed">{t("detailPage.faceAware.trailerCaption")}</p>
             </motion.div>
+          </div>
           </div>
         </section>
 
@@ -218,7 +235,7 @@ const FaceAwareMoreInfo = () => {
 
         {/* Final Product */}
         <section className="c-space">
-          <motion.div className="space-y-8" {...fadeInProps()}>
+          <motion.div ref={demoVideoRef} className="space-y-8" {...fadeInProps()}>
             <SectionHeader
               eyebrow={t("detailPage.finalProduct")}
               title={t("detailPage.faceAware.finalTitle")}
@@ -311,6 +328,13 @@ const FaceAwareMoreInfo = () => {
         <section className="c-space">
           <motion.div className="mx-auto grid w-full max-w-3xl gap-4 place-items-center md:grid-cols-3" {...fadeInProps()}>
             <MagicButton
+              title={cameFromAllProjects ? t("detailPage.backToAllProjects") : t("detailPage.returnToProjects")}
+              icon={<FaArrowLeft />}
+              position="left"
+              handleClick={handleReturn}
+              otherClasses="md:w-full md:mt-0"
+            />
+            <MagicButton
               title={t("detailPage.watchTrailer")}
               icon={<FaPlay />}
               position="left"
@@ -322,13 +346,6 @@ const FaceAwareMoreInfo = () => {
               icon={<FaLocationArrow />}
               position="left"
               handleClick={handleViewDemo}
-              otherClasses="md:w-full md:mt-0"
-            />
-            <MagicButton
-              title={t("detailPage.returnToProjects")}
-              icon={<FaArrowLeft />}
-              position="left"
-              handleClick={handleReturn}
               otherClasses="md:w-full md:mt-0"
             />
           </motion.div>

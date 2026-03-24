@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaLocationArrow, FaPlay, FaMagnifyingGlassPlus } from "react-icons/fa6";
 import { SiCss3, SiFigma, SiFlutter, SiGitlab, SiTailwindcss } from "react-icons/si";
@@ -93,16 +93,21 @@ const InnoBeweegLabMoreInfo = () => {
   const { t, lang } = useLanguage();
   const d = lang === "nl" ? innoBeweegLabDetailNL : innoBeweegLabDetail;
   const walkthroughRef = useRef<HTMLDivElement | null>(null);
+  const promoRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
+  const [cameFromAllProjects, setCameFromAllProjects] = useState(false);
 
   const promoUrl = embedUrl(d.promoVideoLink);
   const demoUrl  = embedUrl(d.demoVideoLink);
 
+  useEffect(() => {
+    setCameFromAllProjects(sessionStorage.getItem("cameFrom") === "allProjects");
+  }, []);
 
   const handleScrollToDemo = () =>
     walkthroughRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  const handleReturn = () => navigateTo("/#projects");
+  const handleReturn = () => navigateTo(cameFromAllProjects ? "/projects" : "/#projects");
 
   return (
     <div className="min-h-screen bg-[#0a0f1c] text-white">
@@ -116,7 +121,18 @@ const InnoBeweegLabMoreInfo = () => {
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent mix-blend-screen opacity-10" />
           </div>
 
-          <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+          <div className="c-space relative z-10">
+            {cameFromAllProjects && (
+              <button
+                type="button"
+                onClick={() => navigateTo("/projects")}
+                className="group inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors duration-200 focus-visible:outline-none mb-8"
+              >
+                <FaArrowLeft className="w-3 h-3 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                {t("detailPage.backToAllProjects")}
+              </button>
+            )}
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             {/* left */}
             <motion.div className="space-y-6" {...fadeInProps()}>
               <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
@@ -143,6 +159,7 @@ const InnoBeweegLabMoreInfo = () => {
 
             {/* right - promo trailer */}
             <motion.div
+              ref={promoRef}
               className="relative space-y-3 max-w-xl w-full lg:justify-self-end"
               {...fadeInProps(0.15)}
             >
@@ -159,6 +176,7 @@ const InnoBeweegLabMoreInfo = () => {
                 {t("detailPage.innoBeweegLab.promoCaption")}
               </p>
             </motion.div>
+          </div>
           </div>
         </section>
 
@@ -310,10 +328,17 @@ const InnoBeweegLabMoreInfo = () => {
             {...fadeInProps()}
           >
             <MagicButton
+              title={cameFromAllProjects ? t("detailPage.backToAllProjects") : t("detailPage.returnToProjects")}
+              icon={<FaArrowLeft />}
+              position="left"
+              handleClick={handleReturn}
+              otherClasses="md:w-full md:mt-0"
+            />
+            <MagicButton
               title={t("detailPage.watchPromo")}
               icon={<FaPlay />}
               position="left"
-              handleClick={() => window.open(d.promoVideoLink, "_blank", "noopener,noreferrer")}
+              handleClick={() => promoRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
@@ -321,13 +346,6 @@ const InnoBeweegLabMoreInfo = () => {
               icon={<FaLocationArrow />}
               position="left"
               handleClick={handleScrollToDemo}
-              otherClasses="md:w-full md:mt-0"
-            />
-            <MagicButton
-              title={t("detailPage.returnToProjects")}
-              icon={<FaArrowLeft />}
-              position="left"
-              handleClick={handleReturn}
               otherClasses="md:w-full md:mt-0"
             />
           </motion.div>

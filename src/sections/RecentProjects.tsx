@@ -80,6 +80,7 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
             const ctaLabel = resolveCtaLabel(item.ctaLabel, isVideoLink);
             const navigateToDetail = () => {
               if (!item.detailPath) return;
+              sessionStorage.setItem("cameFrom", "recentProjects");
               navigateTo(item.detailPath);
             };
 

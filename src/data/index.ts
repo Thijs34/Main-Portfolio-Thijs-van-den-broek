@@ -395,7 +395,7 @@ export const b2bMagentoDetailNL: typeof b2bMagentoDetail = {
   overviewText:
     "Tijdens mijn stage bij Sparkable sloot ik me aan bij hun push om Magento 2-storefronts te moderniseren met het Hyvä-thema. De storefronts waren snel, maar veel checkout-flows en B2B-add-ons leunden nog op legacy third-party modules die niet werkten met Hyvä en alles vertraagden. Mijn opdracht was deze hiaten te onderzoeken, nieuwe Hyvä-compatibele modules te ontwerpen en werkende prototypes te leveren die Sparkable aan echte klanten kon leveren.",
   experienceDescription:
-    "In vier weken bracht ik de bestaande klantreizen in kaart en herbouwde ik sleutelflows zoals bulkbestellen, Google Address Autofill en Nederlandse KVK-autofill met Hyvä's Tailwind + Alpine.js-stack. Elke module moest overeenkomen met Magento's backend-datastructuren terwijl het nieuwe frontend lichtgewicht bleef, dus combineerde ik PHP/XML-layout-updates met moderne Alpine-interacties en grondige documentatie voor overdracht.",
+    "In 5 maanden bracht ik de bestaande klantreizen in kaart en herbouwde ik sleutelflows zoals bulkbestellen, Google Address Autofill en Nederlandse KVK-autofill met Hyvä's Tailwind + Alpine.js-stack. Elke module moest overeenkomen met Magento's backend-datastructuren terwijl het nieuwe frontend lichtgewicht bleef, dus combineerde ik PHP/XML-layout-updates met moderne Alpine-interacties en grondige documentatie voor overdracht.",
   finalProductDescription:
     "Volledige walkthrough van de modules in een Hyvä-storefront: bulk-orderroosters, gestroomlijnde checkout en verbeteringen van adresautofill, allemaal vastgelegd om de prestatiewinst ten opzichte van de legacy-stack te tonen.",
   impactDescription:

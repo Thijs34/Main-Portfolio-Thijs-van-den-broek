@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaLocationArrow, FaPlay, FaMagnifyingGlassPlus } from "react-icons/fa6";
 import { SiCss3, SiFigma, SiJavascript, SiReact, SiSoundcloud, SiSpotify, SiTailwindcss, SiYoutube } from "react-icons/si";
@@ -96,13 +96,18 @@ const MusicSyncMoreInfo = () => {
   const d = lang === "nl" ? musicSyncDetailNL : musicSyncDetail;
   const demoRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
+  const [cameFromAllProjects, setCameFromAllProjects] = useState(false);
 
   const demoUrl = embedUrl(d.demoVideoLink);
+
+  useEffect(() => {
+    setCameFromAllProjects(sessionStorage.getItem("cameFrom") === "allProjects");
+  }, []);
 
   const handleScrollToDemo = () =>
     demoRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  const handleReturn = () => navigateTo("/#projects");
+  const handleReturn = () => navigateTo(cameFromAllProjects ? "/projects" : "/#projects");
 
   return (
     <div className="min-h-screen bg-[#0a0f1c] text-white">
@@ -116,7 +121,18 @@ const MusicSyncMoreInfo = () => {
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent mix-blend-screen opacity-10" />
           </div>
 
-          <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+          <div className="c-space relative z-10">
+            {cameFromAllProjects && (
+              <button
+                type="button"
+                onClick={() => navigateTo("/projects")}
+                className="group inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors duration-200 focus-visible:outline-none mb-8"
+              >
+                <FaArrowLeft className="w-3 h-3 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                {t("detailPage.backToAllProjects")}
+              </button>
+            )}
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <motion.div className="space-y-5" {...fadeInProps()}>
               <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.personalProject")}</p>
               <h1 className="text-4xl font-bold leading-tight md:text-5xl">
@@ -148,6 +164,7 @@ const MusicSyncMoreInfo = () => {
 
             {/* Demo video */}
             <motion.div
+              ref={demoRef}
               className="relative space-y-3 max-w-xl w-full lg:justify-self-end"
               {...fadeInProps(0.15)}
             >
@@ -164,6 +181,7 @@ const MusicSyncMoreInfo = () => {
                 {t("detailPage.musicSync.demoCaption")}
               </p>
             </motion.div>
+          </div>
           </div>
         </section>
 
@@ -288,7 +306,6 @@ const MusicSyncMoreInfo = () => {
         {/* ── Status ── */}
         <section className="c-space">
           <motion.div
-            ref={demoRef}
             className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8 relative overflow-hidden"
             {...fadeInProps()}
           >
@@ -309,17 +326,17 @@ const MusicSyncMoreInfo = () => {
             {...fadeInProps()}
           >
             <MagicButton
+              title={cameFromAllProjects ? t("detailPage.backToAllProjects") : t("detailPage.returnToProjects")}
+              icon={<FaArrowLeft />}
+              position="left"
+              handleClick={handleReturn}
+              otherClasses="md:w-full md:mt-0"
+            />
+            <MagicButton
               title={t("detailPage.watchDemo")}
               icon={<FaPlay />}
               position="left"
               handleClick={handleScrollToDemo}
-              otherClasses="md:w-full md:mt-0"
-            />
-            <MagicButton
-              title={t("detailPage.returnToProjects")}
-              icon={<FaArrowLeft />}
-              position="left"
-              handleClick={handleReturn}
               otherClasses="md:w-full md:mt-0"
             />
           </motion.div>

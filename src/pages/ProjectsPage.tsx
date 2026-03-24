@@ -41,7 +41,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
       )}
       onClick={
         !item.comingSoon && item.detailPath
-          ? () => navigateTo(item.detailPath!)
+          ? () => { sessionStorage.setItem("cameFrom", "allProjects"); navigateTo(item.detailPath!); }
           : undefined
       }
     >
@@ -140,7 +140,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
               {item.detailPath && (
                 <button
                   type="button"
-                  onClick={() => navigateTo(item.detailPath!)}
+                  onClick={() => { sessionStorage.setItem("cameFrom", "allProjects"); navigateTo(item.detailPath!); }}
                   className="text-xs font-semibold text-[#c4aaff]/80 hover:text-[#c4aaff] transition-colors duration-200"
                 >
                   {t("projects.moreInfo")}

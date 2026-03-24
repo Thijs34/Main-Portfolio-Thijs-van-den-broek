@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaPlay, FaMagnifyingGlassPlus } from "react-icons/fa6";
 import {
@@ -120,16 +120,21 @@ const B2BMagentoMoreInfo = () => {
   const d = lang === "nl" ? b2bMagentoDetailNL : b2bMagentoDetail;
   const demoRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
+  const [cameFromAllProjects, setCameFromAllProjects] = useState(false);
   const b2bProject = useMemo(() => projects.find((project) => project.id === 3), []);
   const demoShareLink = d.demoVideoLink ?? b2bProject?.link ?? "https://youtu.be/FuP3z1JFzEE";
   const demoEmbedUrl = extractYouTubeEmbedUrl(demoShareLink, "FuP3z1JFzEE");
+
+  useEffect(() => {
+    setCameFromAllProjects(sessionStorage.getItem("cameFrom") === "allProjects");
+  }, []);
 
   const handleWatchDemo = () => {
     demoRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const handleReturn = () => {
-    navigateTo("/#projects");
+    navigateTo(cameFromAllProjects ? "/projects" : "/#projects");
   };
 
   return (
@@ -142,23 +147,35 @@ const B2BMagentoMoreInfo = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24]" />
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent mix-blend-screen opacity-10" />
           </div>
-          <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
-            <motion.div className="space-y-5" {...fadeInProps()}>
-              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">{d.heroTitle}</h1>
-              <p className="text-lg text-white/80 max-w-2xl">{d.heroDescription}</p>
-            </motion.div>
-            <motion.div className="relative space-y-3 max-w-xl w-full lg:justify-self-end" {...fadeInProps(0.15)}>
-              <div className="aspect-[15/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 p-3 shadow-[0_18px_48px_rgba(5,4,15,0.35)]">
-                <img
-                  src={d.heroImage}
-                  alt="B2B Magento hero"
-                  className="h-full w-full rounded-xl object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <p className="text-sm text-white/75 leading-relaxed">{t("detailPage.b2bMagento.heroCaption")}</p>
-            </motion.div>
+          <div className="c-space relative z-10">
+            {cameFromAllProjects && (
+              <button
+                type="button"
+                onClick={() => navigateTo("/projects")}
+                className="group inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors duration-200 focus-visible:outline-none mb-8"
+              >
+                <FaArrowLeft className="w-3 h-3 transition-transform duration-200 group-hover:-translate-x-0.5" />
+                {t("detailPage.backToAllProjects")}
+              </button>
+            )}
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+              <motion.div className="space-y-5" {...fadeInProps()}>
+                <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
+                <h1 className="text-4xl font-bold leading-tight md:text-5xl">{d.heroTitle}</h1>
+                <p className="text-lg text-white/80 max-w-2xl">{d.heroDescription}</p>
+              </motion.div>
+              <motion.div className="relative space-y-3 max-w-xl w-full lg:justify-self-end" {...fadeInProps(0.15)}>
+                <div className="aspect-[15/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 p-3 shadow-[0_18px_48px_rgba(5,4,15,0.35)]">
+                  <img
+                    src={d.heroImage}
+                    alt="B2B Magento hero"
+                    className="h-full w-full rounded-xl object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-sm text-white/75 leading-relaxed">{t("detailPage.b2bMagento.heroCaption")}</p>
+              </motion.div>
+            </div>
           </div>
         </section>
 
@@ -278,17 +295,17 @@ const B2BMagentoMoreInfo = () => {
         <section className="c-space">
           <motion.div className="mx-auto grid w-full max-w-xl gap-4 place-items-center md:grid-cols-2" {...fadeInProps()}>
             <MagicButton
+              title={cameFromAllProjects ? t("detailPage.backToAllProjects") : t("detailPage.returnToProjects")}
+              icon={<FaArrowLeft />}
+              position="left"
+              handleClick={handleReturn}
+              otherClasses="md:w-full md:mt-0"
+            />
+            <MagicButton
               title={t("detailPage.watchDemo")}
               icon={<FaPlay />}
               position="left"
               handleClick={handleWatchDemo}
-              otherClasses="md:w-full md:mt-0"
-            />
-            <MagicButton
-              title={t("detailPage.returnToProjects")}
-              icon={<FaArrowLeft />}
-              position="left"
-              handleClick={handleReturn}
               otherClasses="md:w-full md:mt-0"
             />
           </motion.div>
