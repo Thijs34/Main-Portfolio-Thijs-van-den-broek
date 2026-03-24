@@ -8,7 +8,8 @@ import Navbar from "../sections/Navbar";
 import { navigateTo } from "../lib/pageTransition";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
-import { projects, ePostProDetail } from "../data";
+import { projects, ePostProDetail, ePostProDetailNL } from "../data";
+import { useLanguage } from "../context/LanguageContext";
 
 const fadeInProps = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -121,12 +122,14 @@ const extractYouTubeEmbedUrl = (url: string, fallbackId = "7Bp4MxY0FbI") => {
 };
 
 const EPostProMoreInfo = () => {
+  const { t, lang } = useLanguage();
+  const d = lang === "nl" ? ePostProDetailNL : ePostProDetail;
   const demoRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
   const epostProject = useMemo(() => projects.find((project) => project.id === 2), []);
-  const demoShareLink = ePostProDetail.demoVideoLink ?? "https://youtu.be/7Bp4MxY0FbI";
+  const demoShareLink = d.demoVideoLink ?? "https://youtu.be/7Bp4MxY0FbI";
   const demoEmbedUrl = extractYouTubeEmbedUrl(demoShareLink, "7Bp4MxY0FbI");
-  const liveUrl = ePostProDetail.liveUrl ?? epostProject?.link ?? "https://youtu.be/7Bp4MxY0FbI";
+  const liveUrl = d.liveUrl ?? epostProject?.link ?? "https://youtu.be/7Bp4MxY0FbI";
 
   const handleWatchDemo = () => {
     demoRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -156,22 +159,20 @@ const EPostProMoreInfo = () => {
           </div>
           <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <motion.div className="space-y-5" {...fadeInProps()}>
-              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">Project Spotlight</p>
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">
-                {ePostProDetail.heroTitle}
-              </h1>
-              <p className="text-lg text-white/80 max-w-2xl">{ePostProDetail.heroDescription}</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
+              <h1 className="text-4xl font-bold leading-tight md:text-5xl">{d.heroTitle}</h1>
+              <p className="text-lg text-white/80 max-w-2xl">{d.heroDescription}</p>
             </motion.div>
             <motion.div className="relative space-y-3 max-w-xl w-full lg:justify-self-end" {...fadeInProps(0.15)}>
               <div className="aspect-[15/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 p-3 shadow-[0_18px_48px_rgba(5,4,15,0.35)]">
                 <img
-                  src={ePostProDetail.heroImage}
+                  src={d.heroImage}
                   alt="E-PostPro hero screen"
                   className="h-full w-full rounded-xl object-cover"
                   loading="lazy"
                 />
               </div>
-              <p className="text-sm text-white/75 leading-relaxed">Initial concept shot showing the streamlined AI email interface.</p>
+              <p className="text-sm text-white/75 leading-relaxed">{t("detailPage.epostpro.heroCaption")}</p>
             </motion.div>
           </div>
         </section>
@@ -180,8 +181,8 @@ const EPostProMoreInfo = () => {
         <section id="about" style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
-              <SectionHeader eyebrow="overview" title="Four-week sprint to calm the inbox" />
-              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{ePostProDetail.overviewText}</p>
+              <SectionHeader eyebrow={t("detailPage.overview")} title={t("detailPage.epostpro.overviewTitle")} />
+              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.overviewText}</p>
             </motion.div>
           </div>
         </section>
@@ -191,10 +192,10 @@ const EPostProMoreInfo = () => {
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
               <SectionHeader
-                eyebrow="Experience flow"
-                title="From messy prompt to polished email"
+                eyebrow={t("detailPage.experienceFlow")}
+                title={t("detailPage.epostpro.experienceTitle")}
                 fullWidth
-                description={ePostProDetail.experienceDescription}
+                description={d.experienceDescription}
               />
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {experienceShots.map((shot) => (
@@ -209,10 +210,10 @@ const EPostProMoreInfo = () => {
         <section className="c-space">
           <motion.div ref={demoRef} className="space-y-8" {...fadeInProps()}>
             <SectionHeader
-              eyebrow="Final product"
-              title="Watch the full walkthrough"
+              eyebrow={t("detailPage.finalProduct")}
+              title={t("detailPage.epostpro.finalTitle")}
               fullWidth
-              description={ePostProDetail.finalProductDescription}
+              description={d.finalProductDescription}
             />
             <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-4">
               <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black">
@@ -233,25 +234,25 @@ const EPostProMoreInfo = () => {
           <div className="c-space">
             <motion.div className="grid gap-10 lg:grid-cols-2" {...fadeInProps()}>
               <div className="space-y-4 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">My Role</h3>
+                <h3 className="text-2xl font-semibold">{t("detailPage.myRole")}</h3>
                 <ul className="list-disc space-y-2 pl-5 text-white/80">
-                  {ePostProDetail.roleItems.map((item) => (
+                  {d.roleItems.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
                 <hr className="border-white/10 mt-4" />
                 <div className="mt-4 space-y-3">
-                  <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
+                  <h4 className="text-lg font-semibold text-white">{t("detailPage.skillsInFocus")}</h4>
                   <ul className="list-disc space-y-2 pl-5 text-white/80">
-                    {ePostProDetail.skillsFocus.map((item) => (
+                    {d.skillsFocus.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
               <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">Tools Used</h3>
-                <p className="mt-2 text-white/70">{ePostProDetail.toolsDescription}</p>
+                <h3 className="text-2xl font-semibold">{t("detailPage.toolsUsed")}</h3>
+                <p className="mt-2 text-white/70">{d.toolsDescription}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   {toolIcons.map(({ name, Icon, accent, image }) => (
                     <span
@@ -275,8 +276,8 @@ const EPostProMoreInfo = () => {
         {/* Impact */}
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps()}>
-            <SectionHeader eyebrow="Takeaway" title="What I learned" />
-            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{ePostProDetail.impactDescription}</p>
+            <SectionHeader eyebrow={t("detailPage.takeaway")} title={t("detailPage.epostpro.takeawayTitle")} />
+            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.impactDescription}</p>
           </motion.div>
         </section>
 
@@ -284,14 +285,14 @@ const EPostProMoreInfo = () => {
         <section className="c-space">
           <motion.div className="mx-auto grid w-full max-w-3xl gap-4 place-items-center md:grid-cols-3" {...fadeInProps()}>
             <MagicButton
-              title="Watch Demo"
+              title={t("detailPage.watchDemo")}
               icon={<FaPlay />}
               position="left"
               handleClick={handleWatchDemo}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="Return to Projects"
+              title={t("detailPage.returnToProjects")}
               icon={<FaArrowLeft />}
               position="left"
               handleClick={handleReturn}

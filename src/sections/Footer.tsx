@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../context/LanguageContext";
 
 import { socialMedia } from "../data";
 import MagicButton from "../components/MagicButton";
@@ -21,6 +22,7 @@ type FooterProps = {
 };
 
 const Footer = ({ onReady }: FooterProps) => {
+  const { t } = useLanguage();
   const readyRef = useRef(false);
 
   useEffect(() => {
@@ -56,8 +58,9 @@ const Footer = ({ onReady }: FooterProps) => {
           className="mt-4 sm:mt-6 font-bold text-[26px] sm:text-[32px] md:text-[42px] lg:text-[52px] xl:text-[62px] leading-snug md:leading-tight text-[var(--color-white)] max-w-[900px]"
           variants={itemVariants}
         >
-          Ready to make <span className="text-[var(--color-purple-400)]">your</span>{" "}
-          next project stand out?
+          {t("footer.headingBefore")}
+          <span className="text-[var(--color-purple-400)]">{t("footer.headingAccent")}</span>
+          {t("footer.headingAfter")}
         </motion.h1>
 
         {/* Subtext */}
@@ -65,10 +68,10 @@ const Footer = ({ onReady }: FooterProps) => {
           className="text-[var(--color-white)]/70 mt-4 sm:mt-6 text-sm sm:text-base max-w-[650px]"
           variants={itemVariants}
         >
-          Let’s get in touch and explore how I can make a strong impact on your team.
+          {t("footer.subtext")}
         </motion.p>
 
-        {/* BUTTON — LinkedIn */}
+        {/* BUTTON - LinkedIn */}
         <motion.div className="mt-8 sm:mt-10" variants={itemVariants}>
           <a
             href="https://www.linkedin.com/in/thijs-van-den-broek-aa1aa4245"
@@ -76,7 +79,7 @@ const Footer = ({ onReady }: FooterProps) => {
             rel="noopener noreferrer"
           >
             <MagicButton
-              title="Connect on LinkedIn"
+              title={t("footer.linkedin")}
               icon={
                 <img
                   src="/assets/logos/link.svg"
@@ -100,7 +103,7 @@ const Footer = ({ onReady }: FooterProps) => {
       >
         {/* Copyright */}
         <p className="text-sm text-[var(--color-white)]/70">
-          © 2025 Thijs van den Broek
+          © 2026 Thijs van den Broek
         </p>
 
         {/* Social Icons */}

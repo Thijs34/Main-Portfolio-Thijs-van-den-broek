@@ -1,21 +1,41 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "../context/LanguageContext";
 
-// Navigation links
-const navLinks = [
-  { name: "Home", href: "#home", detailHref: "/" },
-  { name: "About", href: "#about", detailHref: "/#about" },
-  { name: "Work", href: "#work", detailHref: "/#projects" },
-  { name: "Contact", href: "#contact", detailHref: "/#contact" },
-];
+function LanguageToggle({ compact = false }) {
+  const { lang, setLang } = useLanguage();
+  const isNL = lang === "nl";
+
+  return (
+    <button
+      type="button"
+      onClick={() => setLang(isNL ? "en" : "nl")}
+      aria-label={isNL ? "Switch to English" : "Schakel naar Nederlands"}
+      className={`pointer-events-auto flex items-center gap-1 rounded-full border border-purple-500/40 bg-purple-900/20 px-3 py-1 text-xs font-semibold text-purple-300 hover:border-purple-400/70 hover:bg-purple-800/30 hover:text-white transition-all duration-200 select-none ${compact ? "text-[11px] px-2.5" : ""}`}
+    >
+      <span className={`transition-all duration-200 ${!isNL ? "text-white" : "text-purple-400/60"}`}>EN</span>
+      <span className="text-purple-500/50 font-light">|</span>
+      <span className={`transition-all duration-200 ${isNL ? "text-white" : "text-purple-400/60"}`}>NL</span>
+    </button>
+  );
+}
 
 function Navigation({ onClick, activeSection, isDetailPage = false }) {
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { key: "home", href: "#home", detailHref: "/" },
+    { key: "about", href: "#about", detailHref: "/#about" },
+    { key: "work", href: "#work", detailHref: "/#projects" },
+    { key: "contact", href: "#contact", detailHref: "/#contact" },
+  ];
+
   return (
     <ul className="flex flex-col gap-6 sm:flex-row sm:gap-4 items-center">
       {navLinks.map((link) => {
         const isActive = !isDetailPage && activeSection === link.href.substring(1);
         return (
-          <li key={link.name}>
+          <li key={link.key}>
             <a
               href={link.href}
               onClick={(e) => {
@@ -41,7 +61,7 @@ function Navigation({ onClick, activeSection, isDetailPage = false }) {
                 }
               `}
             >
-              {link.name}
+              {t(`nav.${link.key}`)}
               {/* Animated underline */}
               <span
                 className={`absolute left-0 -bottom-1 h-[2px] rounded-full bg-gradient-to-r from-purple-400 to-purple-600 transition-all duration-300 ${
@@ -112,7 +132,7 @@ const Navbar = () => {
         if (visibleEntry) {
           const nextId = visibleEntry.target.id;
           setActiveSection((current) => (current === nextId ? current : nextId));
-          
+
           // Debounce URL hash updates to prevent flickering
           if (hashUpdateTimeout) {
             clearTimeout(hashUpdateTimeout);
@@ -221,29 +241,31 @@ const Navbar = () => {
             />
           </a>
 
-          {/* Hamburger (mobile) */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="pointer-events-auto flex sm:hidden cursor-pointer text-purple-300 hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-1"
-            aria-label="Toggle navigation"
-            aria-expanded={isOpen}
-            aria-controls="mobile-menu"
-          >
-            <img
-              src={isOpen ? "assets/close.svg" : "assets/menu.svg"}
-              className="w-7 h-7"
-              alt=""
-            />
-          </button>
+          {/* Right side: language toggle + hamburger (mobile) */}
+          <div className="flex items-center gap-3 sm:hidden">
+            <LanguageToggle compact />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="pointer-events-auto flex cursor-pointer text-purple-300 hover:text-purple-400 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-md p-1"
+              aria-label="Toggle navigation"
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
+            >
+              <img
+                src={isOpen ? "assets/close.svg" : "assets/menu.svg"}
+                className="w-7 h-7"
+                alt=""
+              />
+            </button>
+          </div>
 
-          {/* Desktop navigation */}
-          <nav
-            className="pointer-events-auto hidden sm:flex"
-            role="navigation"
-            aria-label="Main"
-          >
-            <Navigation activeSection={activeSection} isDetailPage={isDetailPage} />
-          </nav>
+          {/* Desktop navigation + language toggle */}
+          <div className="pointer-events-auto hidden sm:flex items-center gap-5">
+            <nav role="navigation" aria-label="Main">
+              <Navigation activeSection={activeSection} isDetailPage={isDetailPage} />
+            </nav>
+            <LanguageToggle />
+          </div>
         </div>
       </div>
 

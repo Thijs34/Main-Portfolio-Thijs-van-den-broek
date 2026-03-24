@@ -1,8 +1,10 @@
 import { FlipWords } from "./FlipWords";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const HeroText = () => {
+  const { t } = useLanguage();
   const words = ["Web", "App"];
   const accent = "text-purple-400";
   const navbarHeight = 64; // px (match your Navbar's real height)
@@ -41,7 +43,7 @@ const HeroText = () => {
         animate="visible"
         transition={{ delay: 0.3 }}
       >
-        Shaping{" "}
+        {t("hero.beforeFlip")}{" "}
         <span
           className={`${accent} inline-block align-baseline relative`}
           style={{
@@ -57,7 +59,7 @@ const HeroText = () => {
           />
         </span>
         <br />
-        Experiences That Inspire
+        {t("hero.afterFlip")}
       </motion.h1>
 
       {/* Subheading */}
@@ -68,7 +70,7 @@ const HeroText = () => {
         animate="visible"
         transition={{ delay: 0.6 }}
       >
-        I design and develop high-quality websites & applications that are fast, scalable, and user-focused.
+        {t("hero.subtitle")}
       </motion.p>
 
       {/* CTA buttons */}
@@ -83,13 +85,13 @@ const HeroText = () => {
           href="#work"
           className="pointer-events-auto px-6 sm:px-7 py-2.5 sm:py-2 rounded-xl bg-purple-500 text-white font-semibold shadow hover:bg-purple-600 transition text-center text-sm sm:text-base"
         >
-          View My Work
+          {t("hero.cta1")}
         </a>
         <a
           href="#contact"
           className="pointer-events-auto px-6 sm:px-7 py-2.5 sm:py-2 rounded-xl border border-purple-400 text-purple-300 font-semibold hover:bg-purple-900/30 transition text-center text-sm sm:text-base"
         >
-          Let's Connect
+          {t("hero.cta2")}
         </a>
       </motion.div>
 
@@ -110,7 +112,7 @@ const HeroText = () => {
         />
         <div className="text-left">
           <div className="text-sm sm:text-base font-semibold text-white">Thijs van den Broek</div>
-          <div className="text-purple-300 text-[11px] sm:text-xs font-mono tracking-wide">Web & App Developer</div>
+          <div className="text-purple-300 text-[11px] sm:text-xs font-mono tracking-wide">{t("hero.role")}</div>
         </div>
       </motion.button>
 

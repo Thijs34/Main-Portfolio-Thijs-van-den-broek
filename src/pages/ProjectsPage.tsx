@@ -4,6 +4,7 @@ import { FaArrowLeft, FaLocationArrow } from "react-icons/fa6";
 
 import Navbar from "../sections/Navbar";
 import { projects } from "../data";
+import { useLanguage } from "../context/LanguageContext";
 import { cn } from "../lib/utils";
 import { navigateTo } from "../lib/pageTransition";
 
@@ -16,9 +17,17 @@ const fadeIn = (delay = 0) => ({
 });
 
 const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: number }) => {
+  const { t, lang } = useLanguage();
   const linkHref = item.link ?? "#";
   const isVideoLink = /youtube\.com|youtu\.be/.test(linkHref);
-  const ctaLabel = item.ctaLabel ?? (isVideoLink ? "Watch Video" : "Live Site");
+  const resolveCtaLabel = (rawLabel: string | undefined) => {
+    if (!rawLabel) return isVideoLink ? t("projects.watchVideo") : t("projects.liveSite");
+    const normalized = rawLabel.trim().toLowerCase();
+    if (normalized === "watch video") return t("projects.watchVideo");
+    if (normalized === "check live site" || normalized === "live site") return t("projects.liveSite");
+    return rawLabel;
+  };
+  const ctaLabel = resolveCtaLabel(item.ctaLabel);
 
   return (
     <motion.article
@@ -59,7 +68,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-white/35 backdrop-blur-sm">
-                Coming Soon
+                {t("projectsPage.comingSoon")}
               </span>
             </div>
           </>
@@ -75,7 +84,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
         {/* Case-study badge */}
         {item.detailPath && !item.comingSoon && (
           <span className="absolute top-3 left-3 rounded-full border border-[#7a57db]/60 bg-black/70 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#c4aaff] backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
-            Case Study
+            {t("projectsPage.caseStudy")}
           </span>
         )}
       </div>
@@ -97,7 +106,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
             item.comingSoon ? "text-white/25" : "text-white/60"
           )}
         >
-          {item.des}
+          {lang === "nl" ? t(`projectDes.${item.id}`) : item.des}
         </p>
 
         {/* Footer row */}
@@ -124,7 +133,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
           {/* CTA */}
           {item.comingSoon ? (
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/20">
-              In progress
+              {t("projectsPage.inProgress")}
             </span>
           ) : (
             <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -134,7 +143,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
                   onClick={() => navigateTo(item.detailPath!)}
                   className="text-xs font-semibold text-[#c4aaff]/80 hover:text-[#c4aaff] transition-colors duration-200"
                 >
-                  More info
+                  {t("projects.moreInfo")}
                 </button>
               )}
               {item.link && (
@@ -158,6 +167,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
 };
 
 const ProjectsPage = () => {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-[#0a0f1c] text-white">
       <Navbar />
@@ -171,15 +181,15 @@ const ProjectsPage = () => {
               className="group inline-flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors duration-200 focus-visible:outline-none mb-8"
             >
               <FaArrowLeft className="w-3 h-3 transition-transform duration-200 group-hover:-translate-x-0.5" />
-              Back to home
+              {t("projectsPage.backToHome")}
             </button>
           </motion.div>
 
           <motion.div {...fadeIn(0.05)} className="space-y-3 mb-16">
-            <p className="text-xs uppercase tracking-[0.35em] text-[#7a57db]">Portfolio</p>
-            <h1 className="text-4xl font-bold md:text-5xl">All Projects</h1>
+            <p className="text-xs uppercase tracking-[0.35em] text-[#7a57db]">{t("projectsPage.portfolio")}</p>
+            <h1 className="text-4xl font-bold md:text-5xl">{t("projectsPage.allProjects")}</h1>
             <p className="text-white/55 text-base max-w-xl leading-relaxed mt-2">
-              Featured builds, client work, and experiments — with more on the way.
+              {t("projectsPage.description")}
             </p>
           </motion.div>
 

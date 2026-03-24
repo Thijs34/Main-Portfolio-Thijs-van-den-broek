@@ -18,7 +18,8 @@ import Navbar from "../sections/Navbar";
 import { navigateTo } from "../lib/pageTransition";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
-import { projects, b2bMagentoDetail } from "../data";
+import { projects, b2bMagentoDetail, b2bMagentoDetailNL } from "../data";
+import { useLanguage } from "../context/LanguageContext";
 
 const fadeInProps = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -115,10 +116,12 @@ const extractYouTubeEmbedUrl = (url: string, fallbackId = "FuP3z1JFzEE") => {
 };
 
 const B2BMagentoMoreInfo = () => {
+  const { t, lang } = useLanguage();
+  const d = lang === "nl" ? b2bMagentoDetailNL : b2bMagentoDetail;
   const demoRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
   const b2bProject = useMemo(() => projects.find((project) => project.id === 3), []);
-  const demoShareLink = b2bMagentoDetail.demoVideoLink ?? b2bProject?.link ?? "https://youtu.be/FuP3z1JFzEE";
+  const demoShareLink = d.demoVideoLink ?? b2bProject?.link ?? "https://youtu.be/FuP3z1JFzEE";
   const demoEmbedUrl = extractYouTubeEmbedUrl(demoShareLink, "FuP3z1JFzEE");
 
   const handleWatchDemo = () => {
@@ -141,20 +144,20 @@ const B2BMagentoMoreInfo = () => {
           </div>
           <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <motion.div className="space-y-5" {...fadeInProps()}>
-              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">Project Spotlight</p>
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">{b2bMagentoDetail.heroTitle}</h1>
-              <p className="text-lg text-white/80 max-w-2xl">{b2bMagentoDetail.heroDescription}</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
+              <h1 className="text-4xl font-bold leading-tight md:text-5xl">{d.heroTitle}</h1>
+              <p className="text-lg text-white/80 max-w-2xl">{d.heroDescription}</p>
             </motion.div>
             <motion.div className="relative space-y-3 max-w-xl w-full lg:justify-self-end" {...fadeInProps(0.15)}>
               <div className="aspect-[15/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 p-3 shadow-[0_18px_48px_rgba(5,4,15,0.35)]">
                 <img
-                  src={b2bMagentoDetail.heroImage}
+                  src={d.heroImage}
                   alt="B2B Magento hero"
                   className="h-full w-full rounded-xl object-cover"
                   loading="lazy"
                 />
               </div>
-              <p className="text-sm text-white/75 leading-relaxed">Snapshot of the Hyvä storefront modules I delivered at Sparkable.</p>
+              <p className="text-sm text-white/75 leading-relaxed">{t("detailPage.b2bMagento.heroCaption")}</p>
             </motion.div>
           </div>
         </section>
@@ -163,8 +166,8 @@ const B2BMagentoMoreInfo = () => {
         <section id="about" style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
-              <SectionHeader eyebrow="overview" title="Upgrading Magento B2B for Hyvä" />
-              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{b2bMagentoDetail.overviewText}</p>
+              <SectionHeader eyebrow={t("detailPage.overview")} title={t("detailPage.b2bMagento.overviewTitle")} />
+              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.overviewText}</p>
             </motion.div>
           </div>
         </section>
@@ -174,13 +177,13 @@ const B2BMagentoMoreInfo = () => {
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
               <SectionHeader
-                eyebrow="Experience flow"
-                title="Research, rebuild, document"
+                eyebrow={t("detailPage.experienceFlow")}
+                title={t("detailPage.b2bMagento.experienceTitle")}
                 fullWidth
-                description={b2bMagentoDetail.experienceDescription}
+                description={d.experienceDescription}
               />
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {b2bMagentoDetail.mediaShots.map((shot) => (
+                {d.mediaShots.map((shot) => (
                   <MediaTile key={shot.label} {...shot} onExpand={setLightboxImage} />
                 ))}
               </div>
@@ -192,10 +195,10 @@ const B2BMagentoMoreInfo = () => {
         <section className="c-space">
           <motion.div ref={demoRef} className="space-y-8" {...fadeInProps()}>
             <SectionHeader
-              eyebrow="Final product"
-              title="Full module walkthrough"
+              eyebrow={t("detailPage.finalProduct")}
+              title={t("detailPage.b2bMagento.finalTitle")}
               fullWidth
-              description={b2bMagentoDetail.finalProductDescription}
+              description={d.finalProductDescription}
             />
             <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-4">
               <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black">
@@ -216,25 +219,25 @@ const B2BMagentoMoreInfo = () => {
           <div className="c-space">
             <motion.div className="grid gap-10 lg:grid-cols-2" {...fadeInProps()}>
               <div className="space-y-4 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">My Role</h3>
+                <h3 className="text-2xl font-semibold">{t("detailPage.myRole")}</h3>
                 <ul className="list-disc space-y-2 pl-5 text-white/80">
-                  {b2bMagentoDetail.roleItems.map((item) => (
+                  {d.roleItems.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
                 <hr className="border-white/10 mt-4" />
                 <div className="mt-4 space-y-3">
-                  <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
+                  <h4 className="text-lg font-semibold text-white">{t("detailPage.skillsInFocus")}</h4>
                   <ul className="list-disc space-y-2 pl-5 text-white/80">
-                    {b2bMagentoDetail.skillsFocus.map((item) => (
+                    {d.skillsFocus.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
               <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">Tools Used</h3>
-                <p className="mt-2 text-white/70">{b2bMagentoDetail.toolsDescription}</p>
+                <h3 className="text-2xl font-semibold">{t("detailPage.toolsUsed")}</h3>
+                <p className="mt-2 text-white/70">{d.toolsDescription}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   {toolIcons.map(({ name, Icon, accent, image }) => (
                     <span
@@ -258,16 +261,16 @@ const B2BMagentoMoreInfo = () => {
         {/* Impact */}
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps()}>
-            <SectionHeader eyebrow="Takeaway" title="Delivering production-ready modules" />
-            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{b2bMagentoDetail.impactDescription}</p>
+            <SectionHeader eyebrow={t("detailPage.takeaway")} title={t("detailPage.b2bMagento.takeawayTitle")} />
+            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.impactDescription}</p>
           </motion.div>
         </section>
 
         {/* Mentor feedback */}
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps(0.1)}>
-            <SectionHeader eyebrow="Mentor feedback" title="Words from Sparkable" />
-            <p className="text-base leading-relaxed text-white/80 italic max-w-3xl">&ldquo;{b2bMagentoDetail.mentorQuote}&rdquo;</p>
+            <SectionHeader eyebrow={t("detailPage.mentorFeedback")} title={t("detailPage.b2bMagento.mentorTitle")} />
+            <p className="text-base leading-relaxed text-white/80 italic max-w-3xl">&ldquo;{d.mentorQuote}&rdquo;</p>
           </motion.div>
         </section>
 
@@ -275,14 +278,14 @@ const B2BMagentoMoreInfo = () => {
         <section className="c-space">
           <motion.div className="mx-auto grid w-full max-w-xl gap-4 place-items-center md:grid-cols-2" {...fadeInProps()}>
             <MagicButton
-              title="Watch Demo"
+              title={t("detailPage.watchDemo")}
               icon={<FaPlay />}
               position="left"
               handleClick={handleWatchDemo}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="Return to Projects"
+              title={t("detailPage.returnToProjects")}
               icon={<FaArrowLeft />}
               position="left"
               handleClick={handleReturn}

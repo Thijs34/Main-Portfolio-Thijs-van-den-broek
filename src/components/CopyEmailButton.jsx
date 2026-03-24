@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useLanguage } from "../context/LanguageContext";
 
 const CopyEmailButton = () => {
+  const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef(null);
   const email = "thijsvdbroek27@gmail.com";
@@ -48,7 +50,7 @@ const CopyEmailButton = () => {
             transition={{ duration: 0.1, ease: "easeInOut" }}
           >
             <img src="assets/copy-done.svg" className="w-5" alt="copy Icon" />
-            Email has Copied
+            {t("email.copied")}
           </motion.p>
         ) : (
           <motion.p
@@ -60,7 +62,7 @@ const CopyEmailButton = () => {
             transition={{ duration: 0.1 }}
           >
             <img src="assets/copy.svg" className="w-5" alt="copy icon" />
-            Copy Email Address
+            {t("email.copy")}
           </motion.p>
         )}
       </AnimatePresence>

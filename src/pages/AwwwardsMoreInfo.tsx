@@ -7,7 +7,8 @@ import Navbar from "../sections/Navbar";
 import { navigateTo } from "../lib/pageTransition";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
-import { awwwardsDetail } from "../data";
+import { awwwardsDetail, awwwardsDetailNL } from "../data";
+import { useLanguage } from "../context/LanguageContext";
 
 const fadeInProps = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -87,8 +88,10 @@ const SectionHeader = ({
 );
 
 const AwwwardsMoreInfo = () => {
+  const { t, lang } = useLanguage();
+  const d = lang === "nl" ? awwwardsDetailNL : awwwardsDetail;
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
-  const liveUrl = awwwardsDetail.liveUrl ?? "https://i523591.hera.fontysict.net/awwwards/";
+  const liveUrl = d.liveUrl ?? "https://i523591.hera.fontysict.net/awwwards/";
 
   const handleVisitSite = () => {
     window.open(liveUrl, "_blank", "noopener,noreferrer");
@@ -110,15 +113,15 @@ const AwwwardsMoreInfo = () => {
           </div>
           <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <motion.div className="space-y-5" {...fadeInProps()}>
-              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">Project Spotlight</p>
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">{awwwardsDetail.heroTitle}</h1>
-              <p className="text-lg text-white/80 max-w-2xl">{awwwardsDetail.heroDescription}</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
+              <h1 className="text-4xl font-bold leading-tight md:text-5xl">{d.heroTitle}</h1>
+              <p className="text-lg text-white/80 max-w-2xl">{d.heroDescription}</p>
             </motion.div>
             <motion.div className="relative space-y-3 max-w-xl w-full lg:justify-self-end" {...fadeInProps(0.15)}>
               <div className="aspect-[15/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 p-3 shadow-[0_18px_48px_rgba(5,4,15,0.35)]">
-                <img src={awwwardsDetail.heroImage} alt="Awwwards recreation hero" className="h-full w-full rounded-xl object-cover" loading="lazy" />
+                <img src={d.heroImage} alt="Awwwards recreation hero" className="h-full w-full rounded-xl object-cover" loading="lazy" />
               </div>
-              <p className="text-sm text-white/75 leading-relaxed">Hero snapshot recreated entirely with semantic HTML and CSS.</p>
+              <p className="text-sm text-white/75 leading-relaxed">{t("detailPage.awwwards.heroCaption")}</p>
             </motion.div>
           </div>
         </section>
@@ -127,8 +130,8 @@ const AwwwardsMoreInfo = () => {
         <section id="about" style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
-              <SectionHeader eyebrow="overview" title="Two-week fundamentals sprint" />
-              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{awwwardsDetail.overviewText}</p>
+              <SectionHeader eyebrow={t("detailPage.overview")} title={t("detailPage.awwwards.overviewTitle")} />
+              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.overviewText}</p>
             </motion.div>
           </div>
         </section>
@@ -138,19 +141,19 @@ const AwwwardsMoreInfo = () => {
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
               <SectionHeader
-                eyebrow="Process"
-                title="Recreate everything with pure CSS"
+                eyebrow={t("detailPage.awwwards.processEyebrow")}
+                title={t("detailPage.awwwards.processTitle")}
                 fullWidth
-                description={awwwardsDetail.experienceDescription}
+                description={d.experienceDescription}
               />
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {awwwardsDetail.mediaShots.map((shot) => (
+                {d.mediaShots.map((shot) => (
                   <MediaTile key={shot.label} {...shot} onExpand={setLightboxImage} />
                 ))}
               </div>
-              {awwwardsDetail.layoutHighlights ? (
+              {d.layoutHighlights ? (
                 <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4">
-                  <p className="text-sm text-white/70 leading-relaxed max-w-3xl">{awwwardsDetail.layoutHighlights}</p>
+                  <p className="text-sm text-white/70 leading-relaxed max-w-3xl">{d.layoutHighlights}</p>
                 </div>
               ) : null}
             </motion.div>
@@ -161,25 +164,25 @@ const AwwwardsMoreInfo = () => {
         <section className="c-space">
           <motion.div className="grid gap-10 lg:grid-cols-2" {...fadeInProps()}>
             <div className="space-y-4 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-              <h3 className="text-2xl font-semibold">My Role</h3>
+              <h3 className="text-2xl font-semibold">{t("detailPage.myRole")}</h3>
               <ul className="list-disc space-y-2 pl-5 text-white/80">
-                {awwwardsDetail.roleItems.map((item) => (
+                {d.roleItems.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
               <hr className="border-white/10 mt-4" />
               <div className="mt-4 space-y-3">
-                <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
+                <h4 className="text-lg font-semibold text-white">{t("detailPage.skillsInFocus")}</h4>
                 <ul className="list-disc space-y-2 pl-5 text-white/80">
-                  {awwwardsDetail.skillsFocus.map((item) => (
+                  {d.skillsFocus.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
               </div>
             </div>
             <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-              <h3 className="text-2xl font-semibold">Tools Used</h3>
-              <p className="mt-2 text-white/70">{awwwardsDetail.toolsDescription}</p>
+              <h3 className="text-2xl font-semibold">{t("detailPage.toolsUsed")}</h3>
+              <p className="mt-2 text-white/70">{d.toolsDescription}</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {toolIcons.map(({ name, Icon, color }) => (
                   <span key={name} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-white/85 backdrop-blur">
@@ -195,8 +198,8 @@ const AwwwardsMoreInfo = () => {
         {/* Takeaway */}
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps()}>
-            <SectionHeader eyebrow="Takeaway" title="What I gained" />
-            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{awwwardsDetail.impactDescription}</p>
+            <SectionHeader eyebrow={t("detailPage.takeaway")} title={t("detailPage.awwwards.takeawayTitle")} />
+            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.impactDescription}</p>
           </motion.div>
         </section>
 
@@ -204,14 +207,14 @@ const AwwwardsMoreInfo = () => {
         <section className="c-space">
           <motion.div className="mx-auto grid w-full max-w-xl gap-4 place-items-center md:grid-cols-2" {...fadeInProps()}>
             <MagicButton
-              title="Visit Live Site"
+              title={t("detailPage.visitLiveSite")}
               icon={<FaLocationArrow />}
               position="left"
               handleClick={handleVisitSite}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="Return to Projects"
+              title={t("detailPage.returnToProjects")}
               icon={<FaArrowLeft />}
               position="left"
               handleClick={handleReturn}

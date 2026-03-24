@@ -7,8 +7,9 @@ import type { IconType } from "react-icons";
 import Navbar from "../sections/Navbar";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
-import { musicSyncDetail } from "../data";
+import { musicSyncDetail, musicSyncDetailNL } from "../data";
 import { navigateTo } from "../lib/pageTransition";
+import { useLanguage } from "../context/LanguageContext";
 
 const fadeInProps = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -91,10 +92,12 @@ const embedUrl = (url: string) => {
 /* ─────────────────────── */
 
 const MusicSyncMoreInfo = () => {
+  const { t, lang } = useLanguage();
+  const d = lang === "nl" ? musicSyncDetailNL : musicSyncDetail;
   const demoRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
 
-  const demoUrl = embedUrl(musicSyncDetail.demoVideoLink);
+  const demoUrl = embedUrl(d.demoVideoLink);
 
   const handleScrollToDemo = () =>
     demoRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -115,17 +118,17 @@ const MusicSyncMoreInfo = () => {
 
           <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <motion.div className="space-y-5" {...fadeInProps()}>
-              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">Personal Project</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.personalProject")}</p>
               <h1 className="text-4xl font-bold leading-tight md:text-5xl">
-                {musicSyncDetail.heroTitle}
+                {d.heroTitle}
               </h1>
               <p className="text-lg text-white/80 max-w-xl leading-relaxed">
-                {musicSyncDetail.heroDescription}
+                {d.heroDescription}
               </p>
 
               {/* Platform pills */}
               <div className="flex flex-wrap gap-2 pt-1">
-                {musicSyncDetail.platforms.map(({ name, color }) => {
+                {d.platforms.map(({ name, color }) => {
                   const Icon = platformIcons[name];
                   return (
                     <span
@@ -138,7 +141,7 @@ const MusicSyncMoreInfo = () => {
                   );
                 })}
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/40 italic">
-                  + more planned
+                  {t("detailPage.morePlanned")}
                 </span>
               </div>
             </motion.div>
@@ -151,14 +154,14 @@ const MusicSyncMoreInfo = () => {
               <div className="aspect-[15/9] w-full overflow-hidden rounded-2xl border border-white/15 bg-black/80 p-2 shadow-[0_18px_48px_rgba(5,4,15,0.35)]">
                 <iframe
                   src={demoUrl}
-                  title="MusicSync demo"
+                  title={lang === "nl" ? "MusicSync demo" : "MusicSync demo"}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="h-full w-full rounded-xl"
                 />
               </div>
               <p className="text-sm text-white/75 leading-relaxed">
-                The transfer flow working live across platforms.
+                {t("detailPage.musicSync.demoCaption")}
               </p>
             </motion.div>
           </div>
@@ -168,9 +171,9 @@ const MusicSyncMoreInfo = () => {
         <section style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
-              <SectionHeader eyebrow="Overview" title="Why I built it" />
+              <SectionHeader eyebrow={t("detailPage.overview")} title={t("detailPage.musicSync.overviewTitle")} />
               <p className="text-base leading-relaxed text-white/80 max-w-3xl">
-                {musicSyncDetail.overviewText}
+                {d.overviewText}
               </p>
             </motion.div>
           </div>
@@ -181,13 +184,13 @@ const MusicSyncMoreInfo = () => {
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
               <SectionHeader
-                eyebrow="Screenshots"
-                title="The transfer flow"
+                eyebrow={t("detailPage.screenshots")}
+                title={t("detailPage.musicSync.screenshotsTitle")}
                 fullWidth
-                description={musicSyncDetail.howItWorksDescription}
+                description={d.howItWorksDescription}
               />
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                {musicSyncDetail.screenshots.map((shot, i) => (
+                {d.screenshots.map((shot, i) => (
                   <motion.div key={shot.label} {...fadeInProps(i * 0.08)}>
                     <MediaTile
                       label={shot.label}
@@ -205,9 +208,9 @@ const MusicSyncMoreInfo = () => {
         <section style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
-              <SectionHeader eyebrow="Platforms" title="Works across your libraries" />
+              <SectionHeader eyebrow={t("detailPage.platforms")} title={t("detailPage.musicSync.platformsTitle")} />
               <div className="flex flex-wrap gap-4">
-                {musicSyncDetail.platforms.map(({ name, color }) => {
+                {d.platforms.map(({ name, color }) => {
                   const Icon = platformIcons[name];
                   return (
                     <div
@@ -219,7 +222,7 @@ const MusicSyncMoreInfo = () => {
                       )}
                       <span className="font-semibold text-white/90">{name}</span>
                       <span className="ml-1 rounded-full bg-[#7a57db]/20 border border-[#7a57db]/30 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-[#c4aaff]">
-                        Live
+                        {t("detailPage.liveBadge")}
                       </span>
                     </div>
                   );
@@ -233,7 +236,7 @@ const MusicSyncMoreInfo = () => {
                     <div className="h-7 w-7 rounded-full border border-white/15 bg-white/5" />
                     <span className="font-semibold text-white/50">{name}</span>
                     <span className="ml-1 rounded-full border border-white/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.2em] text-white/30">
-                      Planned
+                      {t("detailPage.plannedBadge")}
                     </span>
                   </div>
                 ))}
@@ -247,25 +250,25 @@ const MusicSyncMoreInfo = () => {
           <div className="c-space">
             <motion.div className="grid gap-10 lg:grid-cols-2" {...fadeInProps()}>
               <div className="space-y-4 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">My Role</h3>
+                <h3 className="text-2xl font-semibold">{t("detailPage.myRole")}</h3>
                 <ul className="list-disc space-y-2 pl-5 text-white/80">
-                  {musicSyncDetail.roleItems.map((item) => (
+                  {d.roleItems.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
                 <hr className="border-white/10 mt-4" />
                 <div className="mt-4 space-y-3">
-                  <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
+                  <h4 className="text-lg font-semibold text-white">{t("detailPage.skillsInFocus")}</h4>
                   <ul className="list-disc space-y-2 pl-5 text-white/80">
-                    {musicSyncDetail.skillsFocus.map((item) => (
+                    {d.skillsFocus.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
               <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">Tools Used</h3>
-                <p className="mt-2 text-white/70">{musicSyncDetail.toolsDescription}</p>
+                <h3 className="text-2xl font-semibold">{t("detailPage.toolsUsed")}</h3>
+                <p className="mt-2 text-white/70">{d.toolsDescription}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   {toolIcons.map(({ name, Icon, accent }) => (
                     <span
@@ -291,9 +294,9 @@ const MusicSyncMoreInfo = () => {
           >
             <div className="pointer-events-none absolute -top-8 -left-8 w-48 h-48 rounded-full bg-[#7a57db]/8 blur-3xl" />
             <div className="relative z-10 space-y-4">
-              <SectionHeader eyebrow="Status" title="Work in progress" />
+              <SectionHeader eyebrow={t("detailPage.status")} title={t("detailPage.musicSync.statusTitle")} />
               <p className="text-base leading-relaxed text-white/80 max-w-3xl">
-                {musicSyncDetail.statusNote}
+                {d.statusNote}
               </p>
             </div>
           </motion.div>
@@ -306,14 +309,14 @@ const MusicSyncMoreInfo = () => {
             {...fadeInProps()}
           >
             <MagicButton
-              title="Watch Demo"
+              title={t("detailPage.watchDemo")}
               icon={<FaPlay />}
               position="left"
               handleClick={handleScrollToDemo}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="Return to Projects"
+              title={t("detailPage.returnToProjects")}
               icon={<FaArrowLeft />}
               position="left"
               handleClick={handleReturn}

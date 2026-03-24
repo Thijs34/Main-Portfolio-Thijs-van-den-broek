@@ -2,6 +2,7 @@ import { StrictMode, Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+import { LanguageProvider } from './context/LanguageContext'
 
 const FaceAwareMoreInfo = lazy(() => import('./pages/FaceAwareMoreInfo'))
 const EPostProMoreInfo = lazy(() => import('./pages/EPostProMoreInfo'))
@@ -46,8 +47,10 @@ const resolveRouteComponent = () => {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Suspense fallback={<RouteFallback />}>
-      {resolveRouteComponent()}
-    </Suspense>
+    <LanguageProvider>
+      <Suspense fallback={<RouteFallback />}>
+        {resolveRouteComponent()}
+      </Suspense>
+    </LanguageProvider>
   </StrictMode>,
 )

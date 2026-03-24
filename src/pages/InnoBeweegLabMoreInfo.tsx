@@ -7,8 +7,9 @@ import type { IconType } from "react-icons";
 import Navbar from "../sections/Navbar";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
-import { innoBeweegLabDetail } from "../data";
+import { innoBeweegLabDetail, innoBeweegLabDetailNL } from "../data";
 import { navigateTo } from "../lib/pageTransition";
+import { useLanguage } from "../context/LanguageContext";
 
 const fadeInProps = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -89,11 +90,14 @@ const embedUrl = (url: string) => {
 /* ─────────────────────── */
 
 const InnoBeweegLabMoreInfo = () => {
+  const { t, lang } = useLanguage();
+  const d = lang === "nl" ? innoBeweegLabDetailNL : innoBeweegLabDetail;
   const walkthroughRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
 
-  const promoUrl = embedUrl(innoBeweegLabDetail.promoVideoLink);
-  const demoUrl  = embedUrl(innoBeweegLabDetail.demoVideoLink);
+  const promoUrl = embedUrl(d.promoVideoLink);
+  const demoUrl  = embedUrl(d.demoVideoLink);
+
 
   const handleScrollToDemo = () =>
     walkthroughRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -115,19 +119,19 @@ const InnoBeweegLabMoreInfo = () => {
           <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             {/* left */}
             <motion.div className="space-y-6" {...fadeInProps()}>
-              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">Project Spotlight</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
               <h1 className="text-4xl font-bold leading-tight md:text-5xl">
-                {innoBeweegLabDetail.heroTitle}
+                {d.heroTitle}
               </h1>
               <p className="text-lg text-white/80 max-w-xl leading-relaxed">
-                {innoBeweegLabDetail.heroDescription}
+                {d.heroDescription}
               </p>
               {/* quick stats */}
               <div className="grid grid-cols-3 gap-3 pt-1">
                 {[
-                  { value: "Live", label: "in production" },
-                  { value: "2",    label: "user types"    },
-                  { value: "0",    label: "paper forms"   },
+                  { value: "Live", label: t("detailPage.innoBeweegLab.statLive") },
+                  { value: "2",    label: t("detailPage.innoBeweegLab.statUsers") },
+                  { value: "0",    label: t("detailPage.innoBeweegLab.statPaper") },
                 ].map(({ value, label }) => (
                   <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-center">
                     <p className="text-2xl font-bold text-[#c4aaff]">{value}</p>
@@ -137,7 +141,7 @@ const InnoBeweegLabMoreInfo = () => {
               </div>
             </motion.div>
 
-            {/* right — promo trailer */}
+            {/* right - promo trailer */}
             <motion.div
               className="relative space-y-3 max-w-xl w-full lg:justify-self-end"
               {...fadeInProps(0.15)}
@@ -152,7 +156,7 @@ const InnoBeweegLabMoreInfo = () => {
                 />
               </div>
               <p className="text-sm text-white/75 leading-relaxed">
-                Promo clip showcasing the observation tool in action.
+                {t("detailPage.innoBeweegLab.promoCaption")}
               </p>
             </motion.div>
           </div>
@@ -162,26 +166,26 @@ const InnoBeweegLabMoreInfo = () => {
         <section style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
-              <SectionHeader eyebrow="Overview" title="From paper forms to live data" />
+              <SectionHeader eyebrow={t("detailPage.overview")} title={t("detailPage.innoBeweegLab.overviewTitle")} />
               <p className="text-base leading-relaxed text-white/80 max-w-3xl">
-                {innoBeweegLabDetail.overviewText}
+                {d.overviewText}
               </p>
             </motion.div>
           </div>
         </section>
 
-        {/* ── Observer side — phone tiles ── */}
+        {/* Observer side - phone tiles */}
         <section style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-10" {...fadeInProps()}>
               <SectionHeader
-                eyebrow="Observer experience"
-                title="Built for the field"
+                eyebrow={t("detailPage.innoBeweegLab.observerEyebrow")}
+                title={t("detailPage.innoBeweegLab.observerTitle")}
                 fullWidth
-                description={innoBeweegLabDetail.observerDescription}
+                description={d.observerDescription}
               />
               <div className="flex justify-center gap-8 sm:gap-12 flex-wrap">
-                {innoBeweegLabDetail.observerShots.map((shot, i) => (
+                {d.observerShots.map((shot, i) => (
                   <PhoneTile
                     key={shot.label}
                     label={shot.label}
@@ -195,18 +199,18 @@ const InnoBeweegLabMoreInfo = () => {
           </div>
         </section>
 
-        {/* ── Admin side — phone tiles ── */}
+        {/* Admin side - phone tiles */}
         <section style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-10" {...fadeInProps()}>
               <SectionHeader
-                eyebrow="Admin system"
-                title="Full control, live data"
+                eyebrow={t("detailPage.innoBeweegLab.adminEyebrow")}
+                title={t("detailPage.innoBeweegLab.adminTitle")}
                 fullWidth
-                description={innoBeweegLabDetail.adminDescription}
+                description={d.adminDescription}
               />
               <div className="flex justify-center gap-6 sm:gap-10 flex-wrap">
-                {innoBeweegLabDetail.adminShots.map((shot, i) => (
+                {d.adminShots.map((shot, i) => (
                   <PhoneTile
                     key={shot.label}
                     label={shot.label}
@@ -224,10 +228,10 @@ const InnoBeweegLabMoreInfo = () => {
         <section className="c-space">
           <motion.div ref={walkthroughRef} className="space-y-8" {...fadeInProps()}>
             <SectionHeader
-              eyebrow="Full walkthrough"
-              title="Every screen, every feature"
+              eyebrow={t("detailPage.innoBeweegLab.walkthroughEyebrow")}
+              title={t("detailPage.innoBeweegLab.walkthroughTitle")}
               fullWidth
-              description="A complete run-through of both the observer app and the admin panel, from setting up a project to recording observations and viewing the collected data."
+              description={t("detailPage.innoBeweegLab.walkthroughDescription")}
             />
             <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-4">
               <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black">
@@ -248,25 +252,25 @@ const InnoBeweegLabMoreInfo = () => {
           <div className="c-space">
             <motion.div className="grid gap-10 lg:grid-cols-2" {...fadeInProps()}>
               <div className="space-y-4 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">My Role</h3>
+                <h3 className="text-2xl font-semibold">{t("detailPage.myRole")}</h3>
                 <ul className="list-disc space-y-2 pl-5 text-white/80">
-                  {innoBeweegLabDetail.roleItems.map((item) => (
+                  {d.roleItems.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
                 <hr className="border-white/10 mt-4" />
                 <div className="mt-4 space-y-3">
-                  <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
+                  <h4 className="text-lg font-semibold text-white">{t("detailPage.skillsInFocus")}</h4>
                   <ul className="list-disc space-y-2 pl-5 text-white/80">
-                    {innoBeweegLabDetail.skillsFocus.map((item) => (
+                    {d.skillsFocus.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
               <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">Tools Used</h3>
-                <p className="mt-2 text-white/70">{innoBeweegLabDetail.toolsDescription}</p>
+                <h3 className="text-2xl font-semibold">{t("detailPage.toolsUsed")}</h3>
+                <p className="mt-2 text-white/70">{d.toolsDescription}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   {toolIcons.map(({ name, Icon, accent }) => (
                     <span
@@ -291,9 +295,9 @@ const InnoBeweegLabMoreInfo = () => {
           >
             <div className="pointer-events-none absolute -top-10 -right-10 w-60 h-60 rounded-full bg-[#7a57db]/10 blur-3xl" />
             <div className="relative z-10 space-y-4">
-              <SectionHeader eyebrow="Impact" title="Built it. Deployed it. They use it every day." />
+              <SectionHeader eyebrow={t("detailPage.impact")} title={t("detailPage.innoBeweegLab.impactTitle")} />
               <p className="text-base leading-relaxed text-white/80 max-w-3xl">
-                {innoBeweegLabDetail.impactDescription}
+                {d.impactDescription}
               </p>
             </div>
           </motion.div>
@@ -306,21 +310,21 @@ const InnoBeweegLabMoreInfo = () => {
             {...fadeInProps()}
           >
             <MagicButton
-              title="Watch Promo"
+              title={t("detailPage.watchPromo")}
               icon={<FaPlay />}
               position="left"
-              handleClick={() => window.open(innoBeweegLabDetail.promoVideoLink, "_blank", "noopener,noreferrer")}
+              handleClick={() => window.open(d.promoVideoLink, "_blank", "noopener,noreferrer")}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="Full Walkthrough"
+              title={t("detailPage.fullWalkthrough")}
               icon={<FaLocationArrow />}
               position="left"
               handleClick={handleScrollToDemo}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="Return to Projects"
+              title={t("detailPage.returnToProjects")}
               icon={<FaArrowLeft />}
               position="left"
               handleClick={handleReturn}

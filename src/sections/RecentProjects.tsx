@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { FaLocationArrow } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import type { MotionProps } from "framer-motion";
+import { useLanguage } from "../context/LanguageContext";
 
 import { projects } from "../data";
 import { cn } from "../lib/utils";
@@ -23,6 +24,7 @@ const fadeInProps = (delay = 0): MotionProps => ({
 const featuredProjects = projects.filter((p) => p.featured);
 
 const RecentProjects = ({ onReady }: SectionReadyProps) => {
+  const { t, lang } = useLanguage();
   const readyRef = useRef(false);
 
   useEffect(() => {
@@ -32,6 +34,13 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
   }, [onReady]);
 
   const ctaGradient = "from-[#5c33cc]/70 via-[#7a57db]/90 to-[#9f7bff]/80";
+  const resolveCtaLabel = (rawLabel: string | undefined, isVideoLink: boolean) => {
+    if (!rawLabel) return isVideoLink ? t("projects.watchVideo") : t("projects.checkLive");
+    const normalized = rawLabel.trim().toLowerCase();
+    if (normalized === "watch video") return t("projects.watchVideo");
+    if (normalized === "check live site" || normalized === "live site") return t("projects.checkLive");
+    return rawLabel;
+  };
 
   return (
     <section id="work" className="c-space">
@@ -39,7 +48,7 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
         className="flex flex-col items-center gap-2 md:flex-row md:items-center md:justify-between md:gap-4 mt-4 sm:mt-6"
         {...fadeInProps()}
       >
-        <h2 className="text-heading text-center md:text-left px-2 sm:px-0">Recent Projects</h2>
+        <h2 className="text-heading text-center md:text-left px-2 sm:px-0">{t("projects.heading")}</h2>
 
         <button
           type="button"
@@ -50,8 +59,8 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
           {/* Label mask */}
           <span className="relative overflow-hidden h-[1em] leading-none">
             <span className="flex flex-col transition-transform duration-300 ease-out group-hover:-translate-y-1/2 motion-reduce:transition-none">
-              <span className="text-white">View all</span>
-              <span className="text-white">View all</span>
+              <span className="text-white">{t("projects.viewAll")}</span>
+              <span className="text-white">{t("projects.viewAll")}</span>
             </span>
           </span>
 
@@ -68,7 +77,7 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
           {featuredProjects.map((item, index) => {
             const linkHref = item.link ?? "#";
             const isVideoLink = /youtube\.com|youtu\.be/.test(linkHref);
-            const ctaLabel = item.ctaLabel ?? (isVideoLink ? "Watch Video" : "Check Live Site");
+            const ctaLabel = resolveCtaLabel(item.ctaLabel, isVideoLink);
             const navigateToDetail = () => {
               if (!item.detailPath) return;
               navigateTo(item.detailPath);
@@ -86,7 +95,7 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
                     <PinContainer
                       containerClassName="pin-full w-full"
                       onClick={item.detailPath ? navigateToDetail : undefined}
-                      title={item.detailPath ? "More info" : undefined}
+                      title={item.detailPath ? t("projects.moreInfo") : undefined}
                     >
                       <div className="project-card-scaler">
                         <div className="relative w-full mb-8">
@@ -103,16 +112,16 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
                           </div>
                         </div>
 
-                        <h1 className="font-bold text-xl sm:text-2xl w-full break-words">{item.title}</h1>
+                        <h1 className="project-card-title font-bold text-xl sm:text-2xl w-full break-words">{item.title}</h1>
 
                         <p
-                          className="text-sm sm:text-base font-light w-full break-words"
+                          className="project-card-description text-sm sm:text-base font-light w-full break-words"
                           style={{ color: "#BEC1DD", margin: "1vh 0" }}
                         >
-                          {item.des}
+                          {lang === "nl" ? t(`projectDes.${item.id}`) : item.des}
                         </p>
 
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-7 mb-3 w-full">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-auto pt-6 mb-3 w-full">
                           <div className="flex items-center">
                             {item.iconLists.map((icon, i) => (
                               <div
@@ -162,7 +171,7 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
                             className="sm:hidden w-full rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white/90 transition hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white/20 focus-visible:ring-offset-[#050714]"
                             aria-label={`Open detailed case study for ${item.title}`}
                           >
-                            More info
+                            {t("projects.moreInfo")}
                           </button>
                         ) : null}
                       </div>

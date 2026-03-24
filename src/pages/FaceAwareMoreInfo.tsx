@@ -8,7 +8,8 @@ import Navbar from "../sections/Navbar";
 import { navigateTo } from "../lib/pageTransition";
 import MagicButton from "../components/MagicButton";
 import ImageLightbox from "../components/ImageLightbox";
-import { projects, faceAwareDetail } from "../data";
+import { projects, faceAwareDetail, faceAwareDetailNL } from "../data";
+import { useLanguage } from "../context/LanguageContext";
 
 
 const fadeInProps = (delay = 0) => ({
@@ -129,6 +130,8 @@ const extractYouTubeEmbedUrl = (url: string, fallbackId = "hMK0f0T0WjY") => {
 };
 
 const FaceAwareMoreInfo = () => {
+  const { t, lang } = useLanguage();
+  const d = lang === "nl" ? faceAwareDetailNL : faceAwareDetail;
   const trailerRef = useRef<HTMLDivElement | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxShot | null>(null);
   const faceAwareProject = useMemo(() => projects.find((project) => project.id === 1), []);
@@ -161,11 +164,9 @@ const FaceAwareMoreInfo = () => {
           </div>
           <div className="c-space relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <motion.div className="space-y-5" {...fadeInProps()}>
-              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">Project Spotlight</p>
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">
-                {faceAwareDetail.heroTitle}
-              </h1>
-              <p className="text-lg text-white/80 max-w-2xl">{faceAwareDetail.heroDescription}</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-[#7a57db]">{t("detailPage.projectSpotlight")}</p>
+              <h1 className="text-4xl font-bold leading-tight md:text-5xl">{d.heroTitle}</h1>
+              <p className="text-lg text-white/80 max-w-2xl">{d.heroDescription}</p>
             </motion.div>
             <motion.div
               ref={trailerRef}
@@ -181,7 +182,7 @@ const FaceAwareMoreInfo = () => {
                   className="h-full w-full rounded-xl"
                 />
               </div>
-              <p className="text-sm text-white/75 leading-relaxed">Clip from the live trailer captured during Night of the Nerds.</p>
+              <p className="text-sm text-white/75 leading-relaxed">{t("detailPage.faceAware.trailerCaption")}</p>
             </motion.div>
           </div>
         </section>
@@ -190,11 +191,8 @@ const FaceAwareMoreInfo = () => {
         <section id="about" style={{ padding: 0 }}>
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
-              <SectionHeader
-                eyebrow="overview"
-                title="Immersive literacy for Night of the Nerds"
-              />
-              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{faceAwareDetail.overviewText}</p>
+              <SectionHeader eyebrow={t("detailPage.overview")} title={t("detailPage.faceAware.overviewTitle")} />
+              <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.overviewText}</p>
             </motion.div>
           </div>
         </section>
@@ -204,10 +202,10 @@ const FaceAwareMoreInfo = () => {
           <div className="c-space">
             <motion.div className="space-y-8" {...fadeInProps()}>
               <SectionHeader
-                eyebrow="Experience flow"
-                title="From web onboarding to VR agency"
+                eyebrow={t("detailPage.experienceFlow")}
+                title={t("detailPage.faceAware.experienceTitle")}
                 fullWidth
-                description={faceAwareDetail.experienceDescription}
+                description={d.experienceDescription}
               />
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {experienceShots.map((shot) => (
@@ -222,10 +220,10 @@ const FaceAwareMoreInfo = () => {
         <section className="c-space">
           <motion.div className="space-y-8" {...fadeInProps()}>
             <SectionHeader
-              eyebrow="Final product"
-              title="Full end-to-end walkthrough"
+              eyebrow={t("detailPage.finalProduct")}
+              title={t("detailPage.faceAware.finalTitle")}
               fullWidth
-              description={faceAwareDetail.finalProductDescription}
+              description={d.finalProductDescription}
             />
             <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-4">
               <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black">
@@ -245,9 +243,9 @@ const FaceAwareMoreInfo = () => {
         <section className="c-space">
           <motion.div className="space-y-8" {...fadeInProps()}>
             <SectionHeader
-              eyebrow="Night of the Nerds"
-              title="Dozens of students stepped into FaceAware"
-              description={faceAwareDetail.eventDescription}
+              eyebrow={t("detailPage.faceAware.eventEyebrow")}
+              title={t("detailPage.faceAware.eventTitle")}
+              description={d.eventDescription}
             />
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {eventShots.map((shot) => (
@@ -262,25 +260,25 @@ const FaceAwareMoreInfo = () => {
           <div className="c-space">
             <motion.div className="grid gap-10 lg:grid-cols-2" {...fadeInProps()}>
               <div className="space-y-4 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">My Role</h3>
+                <h3 className="text-2xl font-semibold">{t("detailPage.myRole")}</h3>
                 <ul className="list-disc space-y-2 pl-5 text-white/80">
-                  {faceAwareDetail.roleItems.map((item) => (
+                  {d.roleItems.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
                 <hr className="border-white/10 mt-4" />
                 <div className="mt-4 space-y-3">
-                  <h4 className="text-lg font-semibold text-white">Skills in focus</h4>
+                  <h4 className="text-lg font-semibold text-white">{t("detailPage.skillsInFocus")}</h4>
                   <ul className="list-disc space-y-2 pl-5 text-white/80">
-                    {faceAwareDetail.skillsFocus.map((item) => (
+                    {d.skillsFocus.map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
                 </div>
               </div>
               <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-6">
-                <h3 className="text-2xl font-semibold">Tools Used</h3>
-                <p className="mt-2 text-white/70">{faceAwareDetail.toolsDescription}</p>
+                <h3 className="text-2xl font-semibold">{t("detailPage.toolsUsed")}</h3>
+                <p className="mt-2 text-white/70">{d.toolsDescription}</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   {toolIcons.map(({ name, Icon, accent, image }) => (
                     <span
@@ -304,8 +302,8 @@ const FaceAwareMoreInfo = () => {
         {/* Impact */}
         <section className="c-space">
           <motion.div className="space-y-5 rounded-3xl border border-white/10 bg-gradient-to-br from-[#1f1e39] to-[#0b0f24] p-8" {...fadeInProps()}>
-            <SectionHeader eyebrow="Impact" title="What students took away" />
-            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{faceAwareDetail.impactDescription}</p>
+            <SectionHeader eyebrow={t("detailPage.impact")} title={t("detailPage.faceAware.impactTitle")} />
+            <p className="text-base leading-relaxed text-white/80 max-w-3xl">{d.impactDescription}</p>
           </motion.div>
         </section>
 
@@ -313,21 +311,21 @@ const FaceAwareMoreInfo = () => {
         <section className="c-space">
           <motion.div className="mx-auto grid w-full max-w-3xl gap-4 place-items-center md:grid-cols-3" {...fadeInProps()}>
             <MagicButton
-              title="Watch Trailer"
+              title={t("detailPage.watchTrailer")}
               icon={<FaPlay />}
               position="left"
               handleClick={handleWatchTrailer}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="View Demo"
+              title={t("detailPage.viewDemo")}
               icon={<FaLocationArrow />}
               position="left"
               handleClick={handleViewDemo}
               otherClasses="md:w-full md:mt-0"
             />
             <MagicButton
-              title="Return to Projects"
+              title={t("detailPage.returnToProjects")}
               icon={<FaArrowLeft />}
               position="left"
               handleClick={handleReturn}
