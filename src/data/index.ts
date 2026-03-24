@@ -23,7 +23,7 @@ export const projects: Project[] = [
   {
     id: 1,
     title: "Exploring Deepfakes in VR",
-    des: "Facial scanning technology in virtual reality used to visualize deepfakes, highlighting the risks and ethical concerns of manipulating someone’s identity.",
+    des: "Facial scanning systems in virtual reality used to simulate deepfakes, highlighting the risks and moral concerns of modifying someone’s identity.",
     img: "/assets/project1.1.png",
     iconLists: ["/assets/logos/React.svg", "/assets/logos/JavaScript.svg", "/assets/logos/Google.svg", "/assets/logos/Figma.svg"],
     link: "https://youtu.be/PSMM_yQ7abI",
@@ -45,7 +45,7 @@ export const projects: Project[] = [
   {
     id: 3,
     title: "B2B Magento Webshop",
-    des: "B2B webshop built with Hyva in Magento2, using custom modules to deliver a fast and highly efficient user experience while ensuring top-notch overall performance.",
+    des: "B2B webshop built with Hyva in Magento2, using custom modules to provide a fast and highly efficient user experience while ensuring top-level overall performance.",
     img: "/assets/project1.3.png",
     iconLists: ["/assets/logos/Magento.svg", "/assets/logos/hyva.svg", "/assets/logos/JavaScript.svg", "/assets/logos/xml.svg"],
     link: "https://youtu.be/9K0Sbo8FQaY?si=LFdOgUY49NCTnQV0",
@@ -66,7 +66,7 @@ export const projects: Project[] = [
   {
     id: 5,
     title: "InnoBeweegLab Observation App",
-    des: "Digital fieldwork tool replacing paper-based observation forms at InnoBeweegLab, designed for outdoor use and now actively used in production.",
+    des: "Digital fieldwork system replacing paper-based observation forms at InnoBeweegLab, designed for outdoor use and now actively used in real production.",
     img: "/assets/Innobeweeglab/inno.png",
     iconLists: ["/assets/logos/Flutter.svg", "/assets/logos/Figma.svg", "/assets/logos/Tailwind.svg", "/assets/logos/Gitlab.svg"],
     link: "https://youtu.be/OjFUQKNWjEs",
@@ -77,7 +77,7 @@ export const projects: Project[] = [
   {
     id: 6,
     title: "MusicSync",
-    des: "Personal tool for transferring playlists between Spotify, YouTube Music, and SoundCloud. Keeping libraries in sync across platforms should not be manual work.",
+    des: "Personal tool for transferring playlists between Spotify, YouTube Music, and SoundCloud. Keeping libraries in sync across platforms should not be manual effort.",
     img: "/assets/MusicSync/homepage.png",
     iconLists: ["/assets/logos/React.svg", "/assets/logos/Tailwind.svg", "/assets/logos/JavaScript.svg", "/assets/logos/Figma.svg"],
     link: "https://youtu.be/ekm5upEG02E",

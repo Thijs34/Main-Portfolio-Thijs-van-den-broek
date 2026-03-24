@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "../lib/utils";
 
@@ -15,17 +15,15 @@ export const PinContainer = ({
   containerClassName?: string;
   onClick?: () => void;
 }) => {
-  const [transform, setTransform] = useState(
-    "translate(-50%,-50%) rotateX(0deg)"
-  );
-  const [cardHeight, setCardHeight] = useState<number | undefined>(undefined);
+  const [isHovered, setIsHovered] = useState(false);
   const [isMobileView, setIsMobileView] = useState(() => {
     if (typeof window === "undefined") return false;
     return window.innerWidth < 768;
   });
-  const cardRef = useRef<HTMLDivElement>(null);
+
   const isInteractive = typeof onClick === "function";
   const hoverEnabled = !isMobileView;
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (!isInteractive || !onClick) return;
     if (event.key === "Enter" || event.key === " ") {
@@ -34,85 +32,42 @@ export const PinContainer = ({
     }
   };
 
-  const onMouseEnter = () => {
-    if (!hoverEnabled) return;
-    setTransform("translate(-50%,-50%) rotateX(40deg) scale(0.8)");
-  };
-  const onMouseLeave = () => {
-    if (!hoverEnabled) return;
-    setTransform("translate(-50%,-50%) rotateX(0deg) scale(1)");
-  };
-
-  // Measure the absolute-centered card and set container height so rows size correctly
   useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
     const update = () => {
-      const rect = el.getBoundingClientRect();
-      setCardHeight(rect.height);
-    };
-    update();
-    // Observe size changes of inner content
-    const ro = new ResizeObserver(() => update());
-    ro.observe(el);
-    window.addEventListener("load", update);
-    window.addEventListener("resize", update);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("load", update);
-      window.removeEventListener("resize", update);
-    };
-  }, []);
-
-  useEffect(() => {
-    const updateViewport = () => {
       if (typeof window === "undefined") return;
       setIsMobileView(window.innerWidth < 768);
     };
-    updateViewport();
-    window.addEventListener("resize", updateViewport);
-    return () => window.removeEventListener("resize", updateViewport);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
-
-  useEffect(() => {
-    if (!hoverEnabled) {
-      setTransform("translate(-50%,-50%) rotateX(0deg) scale(1)");
-    }
-  }, [hoverEnabled]);
 
   return (
     <div
       className={cn(
-        "relative group/pin z-10",
+        "relative group/pin z-10 h-full",
         isInteractive ? "cursor-pointer" : "cursor-default",
         containerClassName
       )}
+      style={{ perspective: "1200px" }}
       role={isInteractive ? "button" : undefined}
       tabIndex={isInteractive ? 0 : undefined}
-      style={{ height: cardHeight }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={() => hoverEnabled && setIsHovered(true)}
+      onMouseLeave={() => hoverEnabled && setIsHovered(false)}
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
       <div
         style={{
-          perspective: "1000px",
-          transform: "rotateX(70deg) translateZ(0deg)",
-          width: "100%",
+          transform: hoverEnabled && isHovered
+            ? "rotateX(6deg) scale(0.98)"
+            : "rotateX(0deg) scale(1)",
+          transformOrigin: "top center",
+          background: "linear-gradient(to bottom, #282b4b, #1f1e39)",
         }}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full"
+        className="relative p-4 flex flex-col rounded-2xl shadow-[0_8px_16px_rgb(0_0_0/0.4)] border border-white/[0.15] group-hover/pin:border-[#7a57db]/[0.5] transition duration-700 overflow-hidden w-full h-full"
       >
-        <div
-          style={{
-            transform: transform,
-            background: "linear-gradient(to bottom, #282b4b, #1f1e39)",
-          }}
-          ref={cardRef}
-          className="absolute left-1/2 p-4 top-1/2 flex justify-start items-start rounded-2xl shadow-[0_8px_16px_rgb(0_0_0/0.4)] border border-white/[0.15] group-hover/pin:border-[#7a57db]/[0.5] transition duration-700 overflow-hidden w-full"
-        >
-          <div className={cn("relative z-50 w-full", className)}>{children}</div>
-        </div>
+        <div className={cn("relative z-50 w-full h-full flex flex-col", className)}>{children}</div>
       </div>
       <PinPerspective title={title} enabled={hoverEnabled} />
     </div>
@@ -139,16 +94,12 @@ export const PinPerspective = ({
             <span className="relative z-20 text-white text-xs font-bold inline-block py-0.5">
               {title ?? "More info"}
             </span>
-
             <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-[#33c2cc]/0 via-[#33c2cc]/90 to-[#33c2cc]/0 transition-opacity duration-500 group-hover/btn:opacity-40"></span>
           </div>
         </div>
 
         <div
-          style={{
-            perspective: "1000px",
-            transform: "rotateX(70deg) translateZ(0)",
-          }}
+          style={{ perspective: "1000px", transform: "rotateX(70deg) translateZ(0)" }}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
           <>
@@ -176,7 +127,7 @@ export const PinPerspective = ({
           </>
         </div>
 
-        {/* Pin line - original position maintained */}
+        {/* Pin line */}
         <>
           <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-[#7a57db] translate-y-[14px] w-px h-20 group-hover/pin:h-40 blur-[2px]" />
           <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-[#7a57db] translate-y-[14px] w-px h-20 group-hover/pin:h-40" />
