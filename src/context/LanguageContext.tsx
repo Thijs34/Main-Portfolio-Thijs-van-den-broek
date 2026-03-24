@@ -77,6 +77,7 @@ const translations = {
       comingSoon: "Coming Soon",
       inProgress: "In progress",
       caseStudy: "Case Study",
+      challenge: "Challenge",
     },
     detailPage: {
       projectSpotlight: "Project Spotlight",
@@ -240,6 +241,7 @@ const translations = {
       comingSoon: "Binnenkort",
       inProgress: "In uitvoering",
       caseStudy: "Case Study",
+      challenge: "Challenge",
     },
     detailPage: {
       projectSpotlight: "Project Spotlight",

@@ -84,7 +84,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
         {/* Case-study badge */}
         {item.detailPath && !item.comingSoon && (
           <span className="absolute top-3 left-3 rounded-full border border-[#7a57db]/60 bg-black/70 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#c4aaff] backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
-            {t("projectsPage.caseStudy")}
+            {item.id === 4 ? t("projectsPage.challenge") : t("projectsPage.caseStudy")}
           </span>
         )}
       </div>
