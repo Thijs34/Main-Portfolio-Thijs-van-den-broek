@@ -87,14 +87,14 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
             return (
               <motion.div
                 key={item.id}
-                className="w-full h-full"
+                className="w-full"
                 style={{ zIndex: 1 }}
                 {...fadeInProps(index * 0.12)}
               >
-                <div className="relative w-full h-full" style={{ zIndex: 1 }}>
-                  <div className="block w-full h-full rounded-2xl">
+                <div className="relative w-full" style={{ zIndex: 1 }}>
+                  <div className="block w-full rounded-2xl">
                     <PinContainer
-                      containerClassName="pin-full w-full h-full"
+                      containerClassName="pin-full w-full"
                       onClick={item.detailPath ? navigateToDetail : undefined}
                       title={item.detailPath ? t("projects.moreInfo") : undefined}
                     >
@@ -116,13 +116,13 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
                         <h1 className="project-card-title font-bold text-xl sm:text-2xl w-full break-words">{item.title}</h1>
 
                         <p
-                          className="project-card-description text-sm sm:text-base font-light w-full break-words flex-1"
+                          className="project-card-description text-sm sm:text-base font-light w-full break-words"
                           style={{ color: "#BEC1DD", margin: "1vh 0" }}
                         >
                           {lang === "nl" ? t(`projectDes.${item.id}`) : item.des}
                         </p>
 
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-4 mb-3 w-full">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-4 pt-2 mb-3 w-full">
                           <div className="flex items-center">
                             {item.iconLists.map((icon, i) => (
                               <div
