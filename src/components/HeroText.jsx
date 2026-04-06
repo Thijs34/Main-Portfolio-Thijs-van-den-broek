@@ -25,7 +25,7 @@ const HeroText = () => {
       id="home"
       className="w-full"
       style={{
-        minHeight: `calc(100vh - ${navbarHeight}px)`,
+        height: `calc(100dvh - ${navbarHeight}px)`,
         marginTop: `${navbarHeight}px`,
         scrollMarginTop: 0,
         display: "flex",
