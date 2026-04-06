@@ -324,6 +324,13 @@ body {
   @apply flex justify-center items-center w-52 h-60 relative;
 }
 
+/* ===== HERO: short phone fix ===== */
+@media (max-height: 673px) and (max-width: 768px) {
+  #home h1,
+  #home h1 div { font-size: 1.75rem !important; line-height: 1.2 !important; }
+  #home > p { font-size: 0.95rem !important; margin-top: 0.25rem !important; }
+}
+
 /* ===== RESPONSIVE DESIGN ===== */
 
 /* Large Desktop */
