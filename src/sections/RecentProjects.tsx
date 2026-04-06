@@ -116,13 +116,13 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
                         <h1 className="project-card-title font-bold text-xl sm:text-2xl w-full break-words">{item.title}</h1>
 
                         <p
-                          className="project-card-description text-sm sm:text-base font-light w-full break-words"
-                          style={{ color: "#BEC1DD", margin: "1vh 0" }}
+                          className="project-card-description mt-2 sm:mt-2.5 mb-0 text-sm sm:text-base font-light w-full break-words"
+                          style={{ color: "#BEC1DD" }}
                         >
                           {lang === "nl" ? t(`projectDes.${item.id}`) : item.des}
                         </p>
 
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-4 pt-2 mb-3 w-full">
+                        <div className="flex flex-col gap-2 sm:gap-3 sm:flex-row sm:items-center sm:justify-between mt-2 sm:mt-2.5 pt-0 sm:pt-1 mb-2 sm:mb-2 w-full">
                           <div className="flex items-center">
                             {item.iconLists.map((icon, i) => (
                               <div
