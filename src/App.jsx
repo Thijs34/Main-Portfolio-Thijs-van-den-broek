@@ -25,6 +25,8 @@ const SectionSkeleton = ({ minHeight = "24rem", label }) => (
   </div>
 );
 
+const MemoSectionSkeleton = React.memo(SectionSkeleton);
+
 export default function App() {
   const initialHashRef = useRef(typeof window !== "undefined" ? window.location.hash : "");
   const [hasHydrated, setHasHydrated] = useState(false);
@@ -44,6 +46,10 @@ export default function App() {
       return { ...prev, [section]: true };
     });
   }, []);
+
+  const handleAboutReady = useCallback(() => markSectionReady("about"), [markSectionReady]);
+  const handleProjectsReady = useCallback(() => markSectionReady("projects"), [markSectionReady]);
+  const handleContactReady = useCallback(() => markSectionReady("contact"), [markSectionReady]);
 
   const isPageReady = useMemo(
     () => hasHydrated && Object.values(loadedSections).every(Boolean),
@@ -89,18 +95,18 @@ export default function App() {
       </div>
       {/* About section BELOW homepage, NO background boxes */}
       <div className="container mx-auto max-w-7xl">
-        <Suspense fallback={<SectionSkeleton label="Loading about section" />}>
-          <About onReady={() => markSectionReady("about")} />
+        <Suspense fallback={<MemoSectionSkeleton label="Loading about section" />}>
+          <About onReady={handleAboutReady} />
         </Suspense>
       </div>
       <div className="container mx-auto max-w-7xl">
-        <Suspense fallback={<SectionSkeleton label="Loading projects" />}>
-          <RecentProjects onReady={() => markSectionReady("projects")} />
+        <Suspense fallback={<MemoSectionSkeleton label="Loading projects" />}>
+          <RecentProjects onReady={handleProjectsReady} />
         </Suspense>
       </div>
        <div className="container mx-auto max-w-7xl">
-        <Suspense fallback={<SectionSkeleton label="Loading footer" minHeight="16rem" />}>
-          <Footer onReady={() => markSectionReady("contact")} />
+        <Suspense fallback={<MemoSectionSkeleton label="Loading footer" minHeight="16rem" />}>
+          <Footer onReady={handleContactReady} />
         </Suspense>
       </div>
     </div>

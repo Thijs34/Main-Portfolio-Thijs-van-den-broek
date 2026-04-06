@@ -85,6 +85,8 @@ const Footer = ({ onReady }: FooterProps) => {
                   src="/assets/logos/link.svg"
                   alt="LinkedIn"
                   className="w-5 h-5"
+                  loading="lazy"
+                  decoding="async"
                 />
               }
               position="right"
@@ -118,7 +120,7 @@ const Footer = ({ onReady }: FooterProps) => {
               <div
                 className="w-9 h-9 sm:w-10 sm:h-10 flex justify-center items-center rounded-lg border border-[var(--color-purple-400)]/40 bg-white/5 backdrop-blur-md cursor-pointer transition-all duration-300 hover:bg-[var(--color-purple-400)]/20 hover:border-[var(--color-purple-400)]/80 hover:scale-110 hover:-translate-y-1"
               >
-                <img src={info.img} alt="icon" width={20} height={20} className="sm:w-[22px] sm:h-[22px] transition-transform duration-300" />
+                <img src={info.img} alt="icon" width={20} height={20} className="sm:w-[22px] sm:h-[22px] transition-transform duration-300" loading="lazy" decoding="async" />
               </div>
             </a>
           ))}

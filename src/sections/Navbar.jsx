@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { memo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
 
-function LanguageToggle({ compact = false }) {
+const LanguageToggle = memo(function LanguageToggle({ compact = false }) {
   const { lang, setLang } = useLanguage();
   const isNL = lang === "nl";
 
@@ -18,9 +18,9 @@ function LanguageToggle({ compact = false }) {
       <span className={`transition-all duration-200 ${isNL ? "text-white" : "text-purple-400/60"}`}>NL</span>
     </button>
   );
-}
+});
 
-function Navigation({ onClick, activeSection, isDetailPage = false }) {
+const Navigation = memo(function Navigation({ onClick, activeSection, isDetailPage = false }) {
   const { t } = useLanguage();
 
   const navLinks = [
@@ -76,7 +76,7 @@ function Navigation({ onClick, activeSection, isDetailPage = false }) {
       })}
     </ul>
   );
-}
+});
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -294,4 +294,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default memo(Navbar);

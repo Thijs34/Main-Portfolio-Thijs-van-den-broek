@@ -133,7 +133,7 @@ const RecentProjects = ({ onReady }: SectionReadyProps) => {
                                   background: "linear-gradient(to bottom, #161a31, #06091f)",
                                 }}
                               >
-                                <img src={icon} alt="tech icon" className="p-2" />
+                                <img src={icon} alt="tech icon" className="p-2" loading="lazy" decoding="async" />
                               </div>
                             ))}
                           </div>

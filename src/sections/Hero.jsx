@@ -1,3 +1,4 @@
+import { memo } from "react";
 import HeroText from "../components/HeroText";
 
 const Hero = () => {
@@ -6,4 +7,4 @@ const Hero = () => {
   </section>
 };
 
-export default Hero
+export default memo(Hero)

@@ -78,6 +78,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
             alt={item.title + " cover"}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
             loading="lazy"
+            decoding="async"
           />
         )}
 
@@ -125,7 +126,7 @@ const ProjectCard = ({ item, index }: { item: typeof projects[number]; index: nu
                   background: "linear-gradient(to bottom, #161a31, #06091f)",
                 }}
               >
-                <img src={icon} alt="tech icon" className="p-1.5 w-full h-full" />
+                <img src={icon} alt="tech icon" className="p-1.5 w-full h-full" loading="lazy" decoding="async" />
               </div>
             ))}
           </div>

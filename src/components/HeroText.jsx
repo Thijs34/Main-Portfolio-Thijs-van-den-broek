@@ -109,6 +109,8 @@ const HeroText = () => {
           src="/assets/Profile.jpg"
           alt="Profile"
           className="w-10 h-10 sm:w-12 sm:h-12 object-cover border border-purple-500/80 shadow rounded-xl"
+          loading="eager"
+          decoding="async"
         />
         <div className="text-left">
           <div className="text-sm sm:text-base font-semibold text-white">Thijs van den Broek</div>

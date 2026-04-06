@@ -1,5 +1,5 @@
 /* @refresh reload */
-import { StrictMode, Suspense, lazy } from 'react'
+import { StrictMode, Suspense, lazy, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -19,38 +19,39 @@ const RouteFallback = () => (
   </div>
 )
 
-const resolveRouteComponent = () => {
-  if (typeof window === 'undefined') return <App />;
-  const normalizedPath = window.location.pathname.replace(/\/+/g, '/').replace(/\/$/, '') || '/';
-  if (normalizedPath.toLowerCase().endsWith('/faceaware') || normalizedPath === '/faceaware') {
-    return <FaceAwareMoreInfo />;
-  }
-  if (normalizedPath.toLowerCase().endsWith('/epostpro') || normalizedPath === '/epostpro') {
-    return <EPostProMoreInfo />;
-  }
-  if (normalizedPath.toLowerCase().endsWith('/b2b-magento') || normalizedPath === '/b2b-magento') {
-    return <B2BMagentoMoreInfo />;
-  }
-  if (normalizedPath.toLowerCase().endsWith('/awwwards') || normalizedPath === '/awwwards') {
-    return <AwwwardsMoreInfo />;
-  }
-  if (normalizedPath.toLowerCase().endsWith('/projects') || normalizedPath === '/projects') {
-    return <ProjectsPage />;
-  }
-  if (normalizedPath.toLowerCase().endsWith('/innobeweeglab') || normalizedPath === '/innobeweeglab') {
-    return <InnoBeweegLabMoreInfo />;
-  }
-  if (normalizedPath.toLowerCase().endsWith('/musicsync') || normalizedPath === '/musicsync') {
-    return <MusicSyncMoreInfo />;
-  }
-  return <App />;
-};
+const routeMap = {
+  '/faceaware': FaceAwareMoreInfo,
+  '/epostpro': EPostProMoreInfo,
+  '/b2b-magento': B2BMagentoMoreInfo,
+  '/awwwards': AwwwardsMoreInfo,
+  '/projects': ProjectsPage,
+  '/innobeweeglab': InnoBeweegLabMoreInfo,
+  '/musicsync': MusicSyncMoreInfo,
+}
+
+const resolvePath = () => {
+  if (typeof window === 'undefined') return '/'
+  const normalizedPath = window.location.pathname.replace(/\/+/g, '/').replace(/\/$/, '') || '/'
+  return normalizedPath.toLowerCase()
+}
+
+const RouteResolver = () => {
+  const routeComponent = useMemo(() => {
+    const path = resolvePath()
+    const entry = Object.entries(routeMap).find(([route]) => path === route || path.endsWith(route))
+    if (!entry) return <App />
+    const [, Component] = entry
+    return <Component />
+  }, [])
+
+  return routeComponent
+}
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <LanguageProvider>
       <Suspense fallback={<RouteFallback />}>
-        {resolveRouteComponent()}
+        <RouteResolver />
       </Suspense>
     </LanguageProvider>
   </StrictMode>,
