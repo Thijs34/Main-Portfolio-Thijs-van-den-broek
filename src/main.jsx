@@ -12,6 +12,7 @@ const AwwwardsMoreInfo = lazy(() => import('./pages/AwwwardsMoreInfo'))
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'))
 const InnoBeweegLabMoreInfo = lazy(() => import('./pages/InnoBeweegLabMoreInfo'))
 const MusicSyncMoreInfo = lazy(() => import('./pages/MusicSyncMoreInfo'))
+const ProveItPrivacy = lazy(() => import('./pages/ProveItPrivacy'))
 
 const RouteFallback = () => (
   <div className="min-h-screen flex items-center justify-center bg-[#030412] text-white">
@@ -27,6 +28,7 @@ const routeMap = {
   '/projects': ProjectsPage,
   '/innobeweeglab': InnoBeweegLabMoreInfo,
   '/musicsync': MusicSyncMoreInfo,
+  '/prove-it-privacy': ProveItPrivacy,
 }
 
 const resolvePath = () => {
